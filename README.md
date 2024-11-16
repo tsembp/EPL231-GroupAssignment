@@ -1,2 +1,2 @@
-# EPL231-GroupAssignment
-EPL231 - Group Assignment (Group 28)
+# EPL231 GroupAssignment (Group 28)
+Panagiotis Tsemebkis & Spyros Gavriil
