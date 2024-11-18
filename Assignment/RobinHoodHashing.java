@@ -12,7 +12,7 @@ public class RobinHoodHashing {
         this.table = new Element[size];
     }
 
-    public void insert(int key){
+    public void insert(char key){
         Element newElement = new Element(key, 0);
 
 
@@ -38,7 +38,7 @@ public class RobinHoodHashing {
 
     }
 
-    public boolean search(int key){
+    public boolean search(char key){
         int index = hashFunction(key);
         int probeLength = 0;
 
@@ -83,8 +83,8 @@ public class RobinHoodHashing {
         }
     }
     
-    private int hashFunction(int key){
-        return key % size;
+    public int hashFunction(char key){
+        return (int)key % size;
     }
 
     public void printHash(){

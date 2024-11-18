@@ -1,54 +1,26 @@
 public class TrieNode {
 	
-	private static int ALPHABET_SIZE = 26;
-	
-	public TrieNode[] children;
-	public int wordCount;
+	public RobinHoodHashing hash;
+	public int importance;
 
 	public TrieNode() {
-		children = new TrieNode[ALPHABET_SIZE];
-		wordCount = 0;
+		hash = new RobinHoodHashing();
+		importance = 0;
 	}
 	
-	static void insert(TrieNode root, String key) {
-		TrieNode current = root;
-		
-		for(int i = 0; i < key.length(); i++) {
-			int index = key.charAt(i) - 'a';
-			
-			if(current.children[index] == null) {
-				current.children[index] = new TrieNode();
-			}
-			
-			current = current.children[index];
-			
-		}
-	
-		current.wordCount++;
+	public void insert(char key) {
+		hash.insert(key);
 	}
 	
-	static boolean search(TrieNode root, String key) {
-		TrieNode current = root;
+	public boolean search(String key) {
 		
-		for(int i = 0; i < key.length(); i++) {
-			int index = key.charAt(i) - 'a';
-			
-			if(current.children[index] == null) return false;
-			
-			current = current.children[index];
-		}
-		
-		return current.wordCount != 0 ? true : false;
+
+		return false;
 	}
 	
 	
 	public static void main(String args[]) {
-		TrieNode root = new TrieNode();
 		
-		insert(root, "application");
-		insert(root, "app");
-		
-		System.out.println(search(root, "app"));
 		
 	}
 	

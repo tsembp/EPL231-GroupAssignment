@@ -1,9 +1,10 @@
 public class Element {
 
-    int key;
+    char key;
     int probeLength;
+    TrieNode node;
     
-    public Element(int key, int probeLength){
+    public Element(char key, int probeLength){
         this.key = key;
         this.probeLength = probeLength;
     }
@@ -12,7 +13,7 @@ public class Element {
         return this.probeLength;
     }
 
-    public int getKey(){
+    public char getKey(){
         return this.key;
     }
 

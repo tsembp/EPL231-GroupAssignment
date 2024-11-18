@@ -4,22 +4,17 @@ public class main {
     	
         RobinHoodHashing hash = new RobinHoodHashing();
 
-        hash.insert(10);
+        hash.insert('a');
 
-        hash.insert(22);
+        hash.insert('d');
 
-        hash.insert(31);
+        hash.insert('t');
 
-        hash.insert(4);
-        hash.printHash();
+        System.out.println("Searching for 'f'... Does it exist? " + hash.search('f'));
 
-        System.out.println("Searching for 7... Does it exist? " + hash.search(7));
+        System.out.println("Searching for 'd'... Does it exist? " + hash.search('d'));
 
-        System.out.println("Searching for 17... Does it exist? " + hash.search(17));
-
-        System.out.println("Searching for 4... Does it exist? " + hash.search(4));
-
-        hash.insert(15);
+        hash.insert('j');
         // hash.insert(16);
         System.out.println("mPL = " + hash.maxProbeLength);
 
