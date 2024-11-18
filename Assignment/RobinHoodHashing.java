@@ -27,9 +27,10 @@ public class RobinHoodHashing {
                 table[index] = newElement;
                 newElement = temp;
             } else {
-                index = (index + 1) % size;
                 newElement.probeLength++;
             }
+
+            index = (index + 1) % size;
         }
 
         table[index] = newElement;
@@ -78,7 +79,9 @@ public class RobinHoodHashing {
         // Reinsert all elements into the new table
         for (Element element : oldTable) {
             if (element != null) {
-                insert(element.getKey());
+                // insert(element.getKey());
+                int index = hashFunction(element.getKey());
+                table[index] = element;
             }
         }
     }
@@ -98,6 +101,21 @@ public class RobinHoodHashing {
         }
 
         System.out.println("]");
+    }
+
+    public static void main(String[] args) {
+        RobinHoodHashing hash = new RobinHoodHashing();
+
+        hash.insert('a');
+        hash.insert('b');
+        hash.insert('c');
+        hash.insert('e');
+        hash.insert('d');
+        hash.insert('l');
+
+        
+        hash.printHash();
+
     }
 
 }
