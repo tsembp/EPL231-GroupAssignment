@@ -11,19 +11,21 @@ public class TrieTree {
 
         for(char c : word.toCharArray()){
             int index = current.hash.hashFunction(c);
-            if(current.hash.search(c)){ // iterate up to not found char c
-                current = current.hash.table[index].node; // move to next node
-            } else{
-                current.hash.insert(c); // insert char
+            if(!current.hash.search(c)){ // iterate up to not found char c
+                current.insert(c); // insert char
             }
+
+            current.hash.table[index].node = new TrieNode();
+            current = current.hash.table[index].node;
         }
         
+        current.isWord = true;
     }
 
     public boolean search(String word){
         TrieNode current = root;
         for(char c : word.toCharArray()){
-            if(!current.hash.search(c)){
+            if(!current.search(c) || current == null){
                 return false;
             }
 
@@ -31,7 +33,7 @@ public class TrieTree {
             current = current.hash.table[index].node;
         }
 
-        return true;
+        return current.isWord;
     }
 
 
