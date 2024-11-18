@@ -53,20 +53,37 @@ public class RobinHoodHashing {
         return false; // key not found
     }
     
-	private void rehash(){
-        if(size == 5) { Element newTable[] = new Element[11]; }
-        else if(size == 11) { Element newTable[] = new Element[19]; }
-        if(size == 19) { Element newTable[] = new Element[29]; }
-
-        
-
-
-    	 
-    	
-    	
-    	
+	private void rehash() {
+        // Determine the new capacity based on a predefined sequence or doubling strategy
+        int newCapacity;
+        if (capacity == 5) {
+            newCapacity = 11;
+        } else if (capacity == 11) {
+            newCapacity = 19;
+        } else if (capacity == 19) {
+            newCapacity = 29;
+        } else {
+            newCapacity = capacity * 2; // Use doubling for future expansions
+        }
+    
+        // Create a new table with the updated capacity
+        Element[] newTable = new Element[newCapacity];
+        Element[] oldTable = table; // Keep reference to the old table
+    
+        // Update instance variables
+        table = newTable;
+        capacity = newCapacity;
+        size = 0; // Reset size as elements will be reinserted
+        maxProbeLength = 0; // Reset maxProbeLength
+    
+        // Reinsert all elements into the new table
+        for (Element element : oldTable) {
+            if (element != null) {
+                insert(element.getKey());
+            }
+        }
     }
-
+    
     private int hashFunction(int key){
         return key % capacity;
     }
