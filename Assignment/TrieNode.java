@@ -23,7 +23,7 @@ public class TrieNode {
 			current = current.children[index];
 			
 		}
-		
+	
 		current.wordCount++;
 	}
 	
