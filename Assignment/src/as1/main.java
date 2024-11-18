@@ -26,10 +26,6 @@ public class main {
 
         System.out.println("Searching for 4... Does it exist? " + hash.search(4));
 
-
-
-
-
     }
 
 

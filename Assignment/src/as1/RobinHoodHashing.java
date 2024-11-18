@@ -53,30 +53,14 @@ public class RobinHoodHashing {
         return false; // key not found
     }
     
-    private int findNextPrime(int n) {
-    	if(n <= 2) return 2;
-    	
-    	while(!isPrime(n)) {
-    		n++;
-    	}
-    	
-    	return n;
-    }
-    
-    private boolean isPrime(int n) {
-		if(n < 2) return false;
-		if(n == 2 || n == 3) return true;
-		if(n % 2 == 0 || n % 3 == 0) return false;
-		
-		for(int i = 5; i * i <= n; i+=6) {
-			if(n % i == 0 || n % (i + 2) == 0) return false;
-		}
-		
-		return true;
-	}
-
 	private void rehash(){
-    	 Element newTalbe[] = new Element[findNextPrime(capacity) * 2*(capacity)];
+        if(size == 5) { Element newTable[] = new Element[11]; }
+        else if(size == 11) { Element newTable[] = new Element[19]; }
+        if(size == 19) { Element newTable[] = new Element[29]; }
+
+        
+
+
     	 
     	
     	
