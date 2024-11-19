@@ -22,6 +22,8 @@ public class TrieNode {
 				index = current.hash.getIndex(c); // get the index after insertion
 			}
 
+			// System.out.println("Printing current index before creating new node: " + index);
+
 			if (current.hash.table[index].node == null) {
 				current.hash.table[index].node = new TrieNode();
 			}
@@ -29,6 +31,7 @@ public class TrieNode {
 		}
 		
 		current.isWord = true;
+		// System.out.println("Finished inserting word: " + key);
 	}
 	
 	public boolean search(String key) {
@@ -42,6 +45,28 @@ public class TrieNode {
 			if (current.hash.table[index].node == null) {
 				return false;
 			}
+			current = current.hash.table[index].node;
+		}
+
+		return current.isWord;
+	}
+
+	public boolean search(String key, boolean flag) {
+		TrieNode current = this;
+		int i=1;
+		for(char c : key.toCharArray()){
+			System.out.println(i++);
+			current.hash.printHash();
+			int index = current.hash.getIndex(c);
+			if(index == -1){
+				return false;
+			}
+
+			if (current.hash.table[index].node == null) {
+				return false;
+			}
+
+			
 			current = current.hash.table[index].node;
 		}
 
