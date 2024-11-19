@@ -15,10 +15,8 @@ public class RobinHoodHashing {
     public void insert(char key){
         Element newElement = new Element(key, 0);
 
-
         // 90% full table => rehash
         if(((double)capacity + 1) / size > 0.9) rehash();
-
 
         int index = hashFunction(key);
 
@@ -54,6 +52,22 @@ public class RobinHoodHashing {
         }
 
         return false; // key not found
+    }
+
+    public int getIndex(char key){
+        int index = hashFunction(key);
+        int probeLength = 0;
+
+        while(table[index] != null && probeLength <= maxProbeLength){
+            if(table[index].getKey() == key){
+                return index;
+            }
+
+            index = (index + 1) % size;
+            probeLength++;
+        }
+
+        return -1; // key not found
     }
     
 	private void rehash() {
@@ -114,7 +128,6 @@ public class RobinHoodHashing {
         hash.insert('d');
         hash.insert('l');
 
-        
         hash.printHash();
 
     }

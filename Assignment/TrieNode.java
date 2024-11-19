@@ -11,41 +11,41 @@ public class TrieNode {
 	}
 	
 	public void insert(String key) {
-		if(key == null || key == "") return;
+		if(key == null || key.equals("")) return;
 
-        TrieNode current = this;
+		TrieNode current = this;
 
-        for(char c : key.toCharArray()){
-            int index = current.hash.hashFunction(c);
-            if(!current.hash.search(c)){ // iterate up to not found char c
-                current.hash.insert(c); // insert char
-            }
+		for(char c : key.toCharArray()){
+			int index = current.hash.getIndex(c);
+			if(index == -1){ // c is not in current.hash
+				current.hash.insert(c); // insert c into current.hash
+				index = current.hash.getIndex(c); // get the index after insertion
+			}
 
-            if (current.hash.table[index].node == null) {
-                current.hash.table[index].node = new TrieNode();
-            }
-            current = current.hash.table[index].node;
-        }
-        
-        current.isWord = true;
+			if (current.hash.table[index].node == null) {
+				current.hash.table[index].node = new TrieNode();
+			}
+			current = current.hash.table[index].node;
+		}
+		
+		current.isWord = true;
 	}
 	
 	public boolean search(String key) {
 		TrieNode current = this;
-        for(char c : key.toCharArray()){
-            if(!current.hash.search(c) || current == null){
-                return false;
-            }
+		for(char c : key.toCharArray()){
+			int index = current.hash.getIndex(c);
+			if(index == -1){
+				return false;
+			}
 
-            int index = current.hash.hashFunction(c);
-            if (current.hash.table[index].node == null) {
-                current.hash.table[index].node = new TrieNode();
-            }
-            current = current.hash.table[index].node;
-            // current = current.hash.table[index].node;
-        }
+			if (current.hash.table[index].node == null) {
+				return false;
+			}
+			current = current.hash.table[index].node;
+		}
 
-        return current.isWord;
+		return current.isWord;
 	}
 
 	public void printTree() {

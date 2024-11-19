@@ -17,9 +17,10 @@ public class Tester {
         tree.insert("eb");
         tree.insert("ec");
         tree.insert("d");
-        // tree.insert("li");
+        tree.insert("li");
+        tree.insert("el");
 
-        // System.out.println(tree.search("d"));
+        // System.out.println(tree.search(""));
         tree.printTree();
 
         // System.out.println(tree.search("cooked"));
