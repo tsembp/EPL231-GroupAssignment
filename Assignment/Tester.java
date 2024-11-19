@@ -1,8 +1,8 @@
-public class main {
+public class Tester {
 
     public static void main(String args[]){
     	
-        TrieTree tree = new TrieTree();
+        TrieNode tree = new TrieNode();
 
         tree.insert("abc");
         tree.insert("cd");
@@ -21,13 +21,6 @@ public class main {
 
         // System.out.println(tree.search("d"));
         tree.printTree();
-
-
-
-
-
-
-
 
         // System.out.println(tree.search("cooked"));
 

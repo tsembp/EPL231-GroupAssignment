@@ -19,6 +19,7 @@ public class RobinHoodHashing {
         // 90% full table => rehash
         if(((double)capacity + 1) / size > 0.9) rehash();
 
+
         int index = hashFunction(key);
 
         while(table[index] != null){
@@ -65,17 +66,17 @@ public class RobinHoodHashing {
         } else {
             newSize = 29;
         }
-    
+        
         // Create a new table with the updated capacity
         Element[] newTable = new Element[newSize];
         Element[] oldTable = this.table; // Keep reference to the old table
-    
+        
         // Update instance variables
         this.table = newTable;
         this.capacity = 0;
         this.size = newSize; // Reset size as elements will be reinserted
         this.maxProbeLength = 0; // Reset maxProbeLength
-    
+        
         // Reinsert all elements into the new table
         for (Element element : oldTable) {
             if (element != null) {
