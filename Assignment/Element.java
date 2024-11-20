@@ -9,6 +9,8 @@ public class Element {
     public Element(char key, int probeLength){
         this.key = key;
         this.probeLength = probeLength;
+        this.importance = 0;
+        this.isWord = false;
     }
 
     public int getProbeLength(){

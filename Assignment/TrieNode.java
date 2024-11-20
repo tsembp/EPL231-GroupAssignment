@@ -10,8 +10,12 @@ public class TrieNode {
 		if(key == null || key.equals("")) return;
 
 		TrieNode current = this;
+		int finalIndex = 0;
 
-		for(char c : key.toCharArray()){
+		for(int i=0; i < key.length(); i++){
+
+			char c = key.charAt(i);
+
 			int index = current.hash.getIndex(c);
 			if(index == -1){ // c is not in current.hash
 				current.hash.insert(c); // insert c into current.hash
@@ -24,13 +28,15 @@ public class TrieNode {
 			if (current.hash.table[index].node == null) {
 				current.hash.table[index].node = new TrieNode();
 			}
-
+			
+			// finalIndex = index;
 			// Move to next node
+			if(i == key.length() - 1) break;
 			current = current.hash.table[index].node;
 		}
 
 		// Look for end of word to mark it with isWord = true
-		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
+		finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
 		if (finalIndex != -1 && current.hash.table[finalIndex] != null) {
 			current.hash.table[finalIndex].isWord = true;
 		}
@@ -40,7 +46,10 @@ public class TrieNode {
 		TrieNode current = this;
 
 		// Iterate over every character of string
-		for(char c : key.toCharArray()){
+		for(int i=0; i < key.length(); i++){
+
+			char c = key.charAt(i);
+
 			int index = current.hash.getIndex(c);
 			if(index == -1){ // character not found => word doesnt exist
 				return false;
@@ -52,6 +61,7 @@ public class TrieNode {
 			}
 
 			// Move to next node
+			if(i == key.length() - 1) break;
 			current = current.hash.table[index].node;
 		}
 
@@ -78,6 +88,7 @@ public class TrieNode {
 			}
 
 			// Move to next node
+			if(j == key.length() - 1) break;
 			current = current.hash.table[index].node;
 		}
 

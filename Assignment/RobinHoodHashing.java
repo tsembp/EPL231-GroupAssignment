@@ -81,6 +81,8 @@ public class RobinHoodHashing {
     private void insertRehash(Element element) {
         Element newElement = new Element(element.getKey(), 0);
         newElement.node = element.node; // Preserve the node reference
+        newElement.isWord = element.isWord;
+        newElement.importance = element.importance;
         int index = hashFunction(newElement.getKey());
 
         while (table[index] != null) {
