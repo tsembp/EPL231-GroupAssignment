@@ -54,9 +54,17 @@ public class TrieNode {
 	public boolean search(String key, boolean flag) {
 		TrieNode current = this;
 		int i=1;
-		for(char c : key.toCharArray()){
-			System.out.println(i++);
-			current.hash.printHash();
+		for(int j=0; j < key.length(); j++){
+
+			char c = key.charAt(j);
+
+			if(c == 'd' && key.charAt(j + 1) == 'd') {
+				hash.printHash();
+				current.hash.table[8].node.hash.printHash();
+			}
+
+			System.out.println(i++);	
+			// current.hash.printHash();
 			int index = current.hash.getIndex(c);
 			if(index == -1){
 				return false;
