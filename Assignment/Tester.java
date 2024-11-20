@@ -6,7 +6,7 @@ public class Tester {
 
     public static void main(String[] args) {
         TrieNode tree = new TrieNode();
-        String filename = "generatedFile500.txt"; // Replace with the path to your file
+        String filename = "testFile100K.txt"; // Replace with the path to your file
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
@@ -30,7 +30,7 @@ public class Tester {
                 word = word.toLowerCase();
                 if (!word.isEmpty()) {
                     boolean found = tree.search(word);
-                    System.out.println("Searching \"" + word + "\". Found = " + found);
+                    // System.out.println("Searching \"" + word + "\". Found = " + found);
                     if(!found) {
                         System.out.println("Word not found: " + word);
                         boolean testo = tree.search(word, found);
