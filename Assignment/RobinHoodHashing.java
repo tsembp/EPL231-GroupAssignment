@@ -21,36 +21,26 @@ public class RobinHoodHashing {
             rehash();
         }
 
+        // Get index of key
         int index = hashFunction(key);
 
         while (table[index] != null) {
-            if (newElement.getKey() == 'd') {
-                // System.out.println(newElement.getKey() + " current probe length: " +
-                // newElement.getProbeLength());
-                // System.out.println("Current max probe is: " + maxProbeLength);
-            }
-
-            if (newElement.probeLength > table[index].getProbeLength()) { // Switch elements
+            if (newElement.probeLength > table[index].getProbeLength()) { // sSwitch elements
                 Element temp = table[index];
                 table[index] = newElement;
                 newElement = temp;
                 maxProbeLength = Math.max(maxProbeLength, table[index].probeLength);
-                if (newElement.getKey() == 'd') {
-                    // System.out.println("In if statement");
-                    // System.out.println("Perfomed swap between " + temp.getKey() + " and " +
-                    // table[index].getKey());
-                }
             }
-            newElement.probeLength++;
 
-            index = (index + 1) % size;
+            newElement.probeLength++; // increment probeLength
+            index = (index + 1) % size; // move to next
         }
 
         // System.out.println("New Element value: " + newElement.getKey() + " probe
         // length: " + newElement.probeLength);
-        maxProbeLength = Math.max(maxProbeLength, newElement.probeLength);
-        table[index] = newElement;
-        capacity++;
+        maxProbeLength = Math.max(maxProbeLength, newElement.probeLength); // update maxProbeLength
+        table[index] = newElement; // insert new element
+        capacity++; // increase capacity
         // System.out.println("Current maxProbeLength: " + maxProbeLength);
         // printHash();
     }
@@ -101,14 +91,14 @@ public class RobinHoodHashing {
                 newElement = temp;
                 maxProbeLength = Math.max(maxProbeLength, table[index].probeLength);
             }
-            newElement.probeLength++;
 
-            index = (index + 1) % size;
+            newElement.probeLength++; // increase probeLength
+            index = (index + 1) % size; // move to next index
         }
 
-        table[index] = newElement;
-        capacity++;
-        maxProbeLength = Math.max(maxProbeLength, newElement.probeLength);
+        table[index] = newElement; // insert element
+        capacity++; // icrease capacity
+        maxProbeLength = Math.max(maxProbeLength, newElement.probeLength); // update maxProbeLength
     }
 
     public boolean search(char key) {
@@ -116,12 +106,12 @@ public class RobinHoodHashing {
         int probeLength = 0;
 
         while (table[index] != null && probeLength <= maxProbeLength) {
-            if (table[index].getKey() == key) {
+            if (table[index].getKey() == key) { // same key => found
                 return true;
             }
 
-            index = (index + 1) % size;
-            probeLength++;
+            index = (index + 1) % size; // move to next index
+            probeLength++; // increase probeLength to avoid useless iterations
         }
 
         return false; // key not found
@@ -135,12 +125,12 @@ public class RobinHoodHashing {
             // System.out.println("Printing current index: " + index);
             // System.out.println("Printing character at table[index]: " +
             // table[index].getKey());
-            if (table[index].getKey() == key) {
+            if (table[index].getKey() == key) { // key found => return its index
                 return index;
             }
 
-            index = (index + 1) % size;
-            probeLength++;
+            index = (index + 1) % size; // move to next hash entry
+            probeLength++; // increase probeLength to avoid useless iterations
         }
 
         return -1; // key not found

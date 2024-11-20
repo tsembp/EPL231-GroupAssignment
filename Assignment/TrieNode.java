@@ -24,9 +24,12 @@ public class TrieNode {
 
 			// System.out.println("Printing current index before creating new node: " + index);
 
+			// Check if node at index is null => create one if yes
 			if (current.hash.table[index].node == null) {
 				current.hash.table[index].node = new TrieNode();
 			}
+
+			// Move to next node
 			current = current.hash.table[index].node;
 		}
 		
@@ -36,15 +39,20 @@ public class TrieNode {
 	
 	public boolean search(String key) {
 		TrieNode current = this;
+
+		// Iterate over every character of string
 		for(char c : key.toCharArray()){
 			int index = current.hash.getIndex(c);
-			if(index == -1){
+			if(index == -1){ // character not found => word doesnt exist
 				return false;
 			}
 
+			// Check if node at index is null => create one if yes
 			if (current.hash.table[index].node == null) {
 				return false;
 			}
+
+			// Move to next node
 			current = current.hash.table[index].node;
 		}
 
@@ -53,28 +61,23 @@ public class TrieNode {
 
 	public boolean search(String key, boolean flag) {
 		TrieNode current = this;
-		int i=1;
-		for(int j=0; j < key.length(); j++){
-
+		for(int j = 0; j < key.length(); j++){
+			// Get character at index j
 			char c = key.charAt(j);
 
-			if(c == 'd' && key.charAt(j + 1) == 'd') {
-				hash.printHash();
-				current.hash.table[8].node.hash.printHash();
-			}
-
-			System.out.println(i++);	
-			// current.hash.printHash();
+			// Get character's index
 			int index = current.hash.getIndex(c);
-			if(index == -1){
+
+			if(index == -1){ // not found
 				return false;
 			}
 
+			// doesnt exist
 			if (current.hash.table[index].node == null) {
 				return false;
 			}
 
-			
+			// Move to next node
 			current = current.hash.table[index].node;
 		}
 
