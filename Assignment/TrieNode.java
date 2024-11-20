@@ -32,6 +32,12 @@ public class TrieNode {
 			// Move to next node
 			current = current.hash.table[index].node;
 		}
+
+		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
+		if (finalIndex != -1 && current.hash.table[finalIndex] != null) {
+			current.hash.table[finalIndex].isWord = true;
+			current.hash.table[finalIndex].importance++;
+		}
 		
 		current.isWord = true;
 		// System.out.println("Finished inserting word: " + key);
@@ -84,34 +90,66 @@ public class TrieNode {
 		return current.isWord;
 	}
 
+	// public void printTree() {
+    //     System.out.println("Words in the Trie:");
+    //     printWords(this, new StringBuilder(), "ROOT"); // Start with the root node
+    // }
+    
+    // // Helper method to recursively print words
+    // private void printWords(TrieNode node, StringBuilder prefix, String parent) {
+    //     if (node == null) return;
+    
+    //     // Print the hash table of the current node using printHash()
+    //     System.out.println("Parent: " + parent + ", Current TrieNode's Hash Table:");
+    //     node.hash.printHash();
+    
+    //     // If the current node represents the end of a word, print it
+    //     if (node.isWord) {
+    //         System.out.println("Word: " + prefix.toString() + " (Parent: " + parent + ")");
+    //     }
+    
+    //     // Recursively traverse each character in the hash table
+    //     for (int i = 0; i < node.hash.table.length; i++) {
+    //         Element entry = node.hash.table[i];
+    //         if (entry != null) {
+    //             char c = entry.key;
+    //             prefix.append(c); // Append the character to the prefix
+    //             printWords(entry.node, prefix, Character.toString(c)); // Recur with the current character as the parent
+    //             prefix.deleteCharAt(prefix.length() - 1); // Backtrack
+    //         }
+    //     }
+    // }
+
 	public void printTree() {
-        System.out.println("Words in the Trie:");
-        printWords(this, new StringBuilder(), "ROOT"); // Start with the root node
-    }
-    
-    // Helper method to recursively print words
-    private void printWords(TrieNode node, StringBuilder prefix, String parent) {
-        if (node == null) return;
-    
-        // Print the hash table of the current node using printHash()
-        System.out.println("Parent: " + parent + ", Current TrieNode's Hash Table:");
-        node.hash.printHash();
-    
-        // If the current node represents the end of a word, print it
-        if (node.isWord) {
-            System.out.println("Word: " + prefix.toString() + " (Parent: " + parent + ")");
-        }
-    
-        // Recursively traverse each character in the hash table
-        for (int i = 0; i < node.hash.table.length; i++) {
-            Element entry = node.hash.table[i];
-            if (entry != null) {
-                char c = entry.key;
-                prefix.append(c); // Append the character to the prefix
-                printWords(entry.node, prefix, Character.toString(c)); // Recur with the current character as the parent
-                prefix.deleteCharAt(prefix.length() - 1); // Backtrack
-            }
-        }
-    }
+		System.out.println("Words in the Trie:");
+		printWords(this, new StringBuilder());
+	}
+	
+	// Helper method to recursively print words and their importance
+	private void printWords(TrieNode node, StringBuilder prefix) {
+		if (node == null) return;
+	
+		// Iterate through each entry in the hash table
+		for (int i = 0; i < node.hash.table.length; i++) {
+			Element entry = node.hash.table[i];
+			if (entry != null) {
+				char c = entry.key;
+				prefix.append(c); // Append the character to the prefix
+	
+				// Check if this node marks the end of a word
+				if (entry.node != null && entry.node.isWord) {
+					System.out.println("Word: " + prefix.toString() + ", Importance: " + entry.node.importance);
+				}
+	
+				// Recur for the next node
+				if (entry.node != null) {
+					printWords(entry.node, prefix);
+				}
+	
+				prefix.deleteCharAt(prefix.length() - 1); // Backtrack
+			}
+		}
+	}
+	
 	
 }

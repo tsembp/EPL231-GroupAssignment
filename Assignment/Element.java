@@ -3,6 +3,8 @@ public class Element {
     char key;
     int probeLength;
     TrieNode node;
+    int importance;
+    boolean isWord;
     
     public Element(char key, int probeLength){
         this.key = key;
