@@ -80,7 +80,7 @@ public class Tester {
             e.printStackTrace();
         }
 
-        String filename = "importance-script.txt"; // Replace with the path to your file
+        // String filename = "importance-script.txt"; // Replace with the path to your file
 
         // // Step 1: Read words from the file and insert them into the Trie
         // try (BufferedReader br = new BufferedReader(new FileReader(filename))) {

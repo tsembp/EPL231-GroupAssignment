@@ -1,13 +1,9 @@
 public class TrieNode {
 	
 	public RobinHoodHashing hash;
-	public int importance;
-	public boolean isWord;
 
 	public TrieNode() {
 		hash = new RobinHoodHashing();
-		importance = 0;
-		isWord = false;
 	}
 	
 	public void insert(String key) {
@@ -33,14 +29,11 @@ public class TrieNode {
 			current = current.hash.table[index].node;
 		}
 
+		// Look for end of word to mark it with isWord = true
 		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
 		if (finalIndex != -1 && current.hash.table[finalIndex] != null) {
 			current.hash.table[finalIndex].isWord = true;
-			current.hash.table[finalIndex].importance++;
 		}
-		
-		current.isWord = true;
-		// System.out.println("Finished inserting word: " + key);
 	}
 	
 	public boolean search(String key) {
@@ -62,7 +55,8 @@ public class TrieNode {
 			current = current.hash.table[index].node;
 		}
 
-		return current.isWord;
+		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
+		return finalIndex != -1 && current.hash.table[finalIndex] != null && current.hash.table[finalIndex].isWord;
 	}
 
 	public boolean search(String key, boolean flag) {
@@ -87,7 +81,8 @@ public class TrieNode {
 			current = current.hash.table[index].node;
 		}
 
-		return current.isWord;
+		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
+		return finalIndex != -1 && current.hash.table[finalIndex] != null && current.hash.table[finalIndex].isWord;
 	}
 
 	// public void printTree() {
@@ -120,36 +115,36 @@ public class TrieNode {
     //     }
     // }
 
-	public void printTree() {
-		System.out.println("Words in the Trie:");
-		printWords(this, new StringBuilder());
-	}
+	// public void printTree() {
+	// 	System.out.println("Words in the Trie:");
+	// 	printWords(this, new StringBuilder());
+	// }
 	
 	// Helper method to recursively print words and their importance
-	private void printWords(TrieNode node, StringBuilder prefix) {
-		if (node == null) return;
+	// private void printWords(TrieNode node, StringBuilder prefix) {
+	// 	if (node == null) return;
 	
-		// Iterate through each entry in the hash table
-		for (int i = 0; i < node.hash.table.length; i++) {
-			Element entry = node.hash.table[i];
-			if (entry != null) {
-				char c = entry.key;
-				prefix.append(c); // Append the character to the prefix
+	// 	// Iterate through each entry in the hash table
+	// 	for (int i = 0; i < node.hash.table.length; i++) {
+	// 		Element entry = node.hash.table[i];
+	// 		if (entry != null) {
+	// 			char c = entry.key;
+	// 			prefix.append(c); // Append the character to the prefix
 	
-				// Check if this node marks the end of a word
-				if (entry.node != null && entry.node.isWord) {
-					System.out.println("Word: " + prefix.toString() + ", Importance: " + entry.node.importance);
-				}
+	// 			// Check if this node marks the end of a word
+	// 			if (entry.node != null && entry.node.isWord) {
+	// 				System.out.println("Word: " + prefix.toString() + ", Importance: " + entry.node.importance);
+	// 			}
 	
-				// Recur for the next node
-				if (entry.node != null) {
-					printWords(entry.node, prefix);
-				}
+	// 			// Recur for the next node
+	// 			if (entry.node != null) {
+	// 				printWords(entry.node, prefix);
+	// 			}
 	
-				prefix.deleteCharAt(prefix.length() - 1); // Backtrack
-			}
-		}
-	}
+	// 			prefix.deleteCharAt(prefix.length() - 1); // Backtrack
+	// 		}
+	// 	}
+	// }
 	
 	
 }
