@@ -74,10 +74,7 @@ public class TrieNode {
 		}
 
 
-<<<<<<< HEAD
 		// int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
-=======
->>>>>>> 50a9c81f0674eb9b45c9f062bf1d785427adb1d2
 		return finalIndex != -1 && current.hash.table[finalIndex] != null && current.hash.table[finalIndex].isWord && current.hash.table[finalIndex].word.equals(key);
 	}
 
