@@ -7,7 +7,7 @@ public class Tester {
     public static void main(String[] args) {
 
         TrieNode tree = new TrieNode();
-        String dictionary = "testFile1.txt"; // Replace with the path to your file
+        String dictionary = "dictionary.txt"; // Replace with the path to your file
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
@@ -29,7 +29,6 @@ public class Tester {
             while ((word = br.readLine()) != null) {
                 word = word.trim(); // Remove leading and trailing whitespace
                 word = word.toLowerCase();
-                if(word.equals("has")) System.out.println("Read has");
                 if (!word.isEmpty()) {
                     boolean found = tree.search(word);
                     // System.out.println("Searching \"" + word + "\". Found = " + found);
