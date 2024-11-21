@@ -3,11 +3,13 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
-public class Tester {
+public class Main {
 
     public static void main(String[] args) {
 
+        /* CONSTRUCT DICTIONARY FILE */
         TrieNode tree = new TrieNode();
         String dictionary = "dictionary.txt"; // Replace with the path to your file
 
@@ -44,6 +46,8 @@ public class Tester {
             e.printStackTrace();
         }
 
+
+        /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
         String filename = "gameofthrones.txt"; // Replace with the path to your file
         String outputFile = "gameofthronesEdited.txt";
 
@@ -91,6 +95,37 @@ public class Tester {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-}
+        
 
+        Scanner scanner = new Scanner(System.in);
+        String word = "";
+        int numAlternatives = 0;
+
+        while(true){
+            System.out.print("Enter a word (or 'exit' to end): ");
+            word = scanner.nextLine();
+
+            if(word.equals("exit")){
+                System.out.println("End of program.");
+                break;
+            }
+
+            System.out.println("Enter number of alternative words (k): ");
+            try {
+                numAlternatives = Integer.parseInt(scanner.nextLine());
+
+                // main logic here
+
+
+                
+            } catch (NumberFormatException e) {
+                System.out.println("Please insert a valid number.");
+            }
+
+            System.out.println(); 
+        }
+
+        scanner.close();
+    }
+
+}
