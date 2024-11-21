@@ -23,6 +23,10 @@ public class Element {
         return this.key;
     }
 
+    public int getImportance(){
+        return this.importance;
+    }
+
     public void setProbeLength(int value){
         this.probeLength = value;
     }
