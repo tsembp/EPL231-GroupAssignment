@@ -11,7 +11,7 @@ public class Main {
 
         /* CONSTRUCT DICTIONARY FILE */
         TrieNode tree = new TrieNode();
-        String dictionary = "testDictionary.txt"; // Replace with the path to your file
+        String dictionary = "dictionary.txt"; // Replace with the path to your file
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
@@ -64,7 +64,7 @@ public class Main {
                     if (!cleanWord.isEmpty()) {
                         // Write the cleaned word with a punctuation mark to the output file
                         // bw.write(cleanWord + ". ");
-                        tree.search(cleanWord);
+                        tree.searchImportance(cleanWord);
                     }
                 }
                 // Add a newline after processing each line
@@ -76,6 +76,8 @@ public class Main {
             e.printStackTrace();
         }
 
+
+
         // // Step 2: Read the file again to detect words with '.' or ',' and search them in the Trie
         // try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
         //     String line;
@@ -84,12 +86,7 @@ public class Main {
         //         for (String word : words) {
         //             if (word.endsWith(".") || word.endsWith(",")) {
         //                 String cleanWord = word.replaceAll("[.,?}{-]", ""); // Remove punctuation
-        //                 boolean found = tree.search(cleanWord);
-        //                 if (!found) {
-        //                     // System.out.println("Word not found: " + cleanWord);
-        //                 } else{
-                            
-        //                 }
+        //                 tree.searchImportance(cleanWord);
         //             }
         //         }
         //     }
@@ -155,28 +152,26 @@ public class Main {
 
         heap.print();
 
-
-
         // return null;
     }
 
-    private static void traverseTrie(TrieNode node, StringBuilder currentWord, MinHeap heap){
+    private static void traverseTrie(TrieNode node, StringBuilder currentWord, MinHeap heap) {
         if(node == null) return;
 
-        for(Element element : node.hash.table){
-            if(element != null){
+        for(Element element : node.hash.table) {
+            if(element != null) {
                 // Append element key at the word
                 currentWord.append(element.key);
 
                 // Check if isWord and add to storage data structure
-                if(element.isWord){
-                    if(heap.isFull()){
+                if(element.isWord) {
+                    if(heap.isFull()) {
                         // If heap is full, replace root element with current element
-                        if(element.getImportance() > heap.getRootImportance()){
+                        if(element.getImportance() > heap.getRootImportance()) {
                             heap.remove();
                             heap.insert(element);
                         }
-                    } else{
+                    } else {
                         heap.insert(element);
                     }
                 }
@@ -190,13 +185,6 @@ public class Main {
                 currentWord.deleteCharAt(currentWord.length() - 1);
 
             }
-
-
-            
         }
-
     }
-
-
-
 }

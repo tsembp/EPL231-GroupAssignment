@@ -128,7 +128,6 @@ public class TrieNode {
 			increaseImportance(current.hash.table[finalIndex]);
 		}
 
-		System.out.println(current.hash.table[finalIndex].importance);
 	}
 
 	private void increaseImportance(Element element) {
