@@ -83,6 +83,7 @@ public class RobinHoodHashing {
         newElement.node = element.node; // Preserve the node reference
         newElement.isWord = element.isWord;
         newElement.importance = element.importance;
+        newElement.word = element.word;
         int index = hashFunction(newElement.getKey());
 
         while (table[index] != null) {
