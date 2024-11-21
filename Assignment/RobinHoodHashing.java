@@ -36,13 +36,9 @@ public class RobinHoodHashing {
             index = (index + 1) % size; // move to next
         }
 
-        // System.out.println("New Element value: " + newElement.getKey() + " probe
-        // length: " + newElement.probeLength);
         maxProbeLength = Math.max(maxProbeLength, newElement.probeLength); // update maxProbeLength
         table[index] = newElement; // insert new element
         capacity++; // increase capacity
-        // System.out.println("Current maxProbeLength: " + maxProbeLength);
-        // printHash();
     }
 
     private void rehash() {
@@ -125,9 +121,6 @@ public class RobinHoodHashing {
         int probeLength = 0;
 
         while (table[index] != null && probeLength <= maxProbeLength) {
-            // System.out.println("Printing current index: " + index);
-            // System.out.println("Printing character at table[index]: " +
-            // table[index].getKey());
             if (table[index].getKey() == key) { // key found => return its index
                 return index;
             }
