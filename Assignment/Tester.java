@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class Tester {
@@ -42,20 +44,29 @@ public class Tester {
             e.printStackTrace();
         }
 
-        String filename = "importance.txt"; // Replace with the path to your file
+        String filename = "gameofthrones.txt"; // Replace with the path to your file
+        String outputFile = "gameofthronesEdited.txt";
 
-        // Step 1: Read words from the file and insert them into the Trie
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+        // Step 1: Read words from the file, clean them, and write to the output file
+        try (BufferedReader br = new BufferedReader(new FileReader(filename));
+             BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile))) {
+            
             String line;
             while ((line = br.readLine()) != null) {
                 String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
                 for (String word : words) {
-                    String cleanWord = word.replaceAll("[.,]", ""); // Remove punctuation
+                    // Clean the word by removing unwanted punctuation
+                    String cleanWord = word.replaceAll("[\"“”.,]", "");
                     if (!cleanWord.isEmpty()) {
-                        // tree.insert(cleanWord);
+                        // Write the cleaned word with a punctuation mark to the output file
+                        bw.write(cleanWord + ". ");
                     }
                 }
+                // Add a newline after processing each line
+                bw.newLine();
             }
+            
+            System.out.println("Processing completed. Cleaned words are written to " + outputFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
