@@ -4,13 +4,13 @@ public class MinHeap {
     private int size;
     private int maxsize;
 
-    private static final int FRONT = 1;
+    private static final int FRONT = 0;
 
     public MinHeap(int maxsize) {
         this.maxsize = maxsize;
         this.size = 0;
 
-        Heap = new Element[this.maxsize + 1];
+        Heap = new Element[this.maxsize];
         Heap[0] = new Element('\0',0); // Dummy element with minimum probeLength
         Heap[0].importance = Integer.MAX_VALUE; // Assign the dummy element's importance to INT_MAX
     }
@@ -20,15 +20,15 @@ public class MinHeap {
     }
 
     private int leftChild(int pos) {
-        return (2 * pos);
-    }
-
-    private int rightChild(int pos) {
         return (2 * pos) + 1;
     }
 
+    private int rightChild(int pos) {
+        return (2 * pos) + 2;
+    }
+
     private boolean isLeaf(int pos) {
-        return pos > (size / 2) && pos <= size;
+        return pos > size / 2 && pos <= size; 
     }
 
     // helper for minHeapify
@@ -39,29 +39,36 @@ public class MinHeap {
     }
 
     private void minHeapify(int pos) {
-        if (!isLeaf(pos)) {
             int left = leftChild(pos);
             int right = rightChild(pos);
             int smallest = pos;
 
-            if (left <= size && Heap[left].getImportance() < Heap[smallest].getImportance()) {
-                smallest = left;
+            if (left < size) {
+                if(Heap[left].getImportance() < Heap[smallest].getImportance()) 
+                    smallest = left;
             }
-            if (right <= size && Heap[right].getImportance() < Heap[smallest].getImportance()) {
-                smallest = right;
+            if (right < size) {
+                if(Heap[right].getImportance() < Heap[smallest].getImportance()) {
+                    smallest = right;
+                }
             }
+
+            if(Heap[parent(pos)].importance > Heap[smallest].importance && isLeaf(pos)) {
+                swap(pos, parent(pos));
+            }
+
             if (smallest != pos) {
                 swap(pos, smallest);
                 minHeapify(smallest);
             }
         }
-    }
 
     public void insert(Element element) {
         if (size < maxsize) {
             // Standard insertion if the heap is not full
-            Heap[++size] = element;
+            Heap[size] = element;
             int current = size;
+            size++;
     
             while (Heap[current].getImportance() < Heap[parent(current)].getImportance()) {
                 swap(current, parent(current));
@@ -69,17 +76,20 @@ public class MinHeap {
             }
         } else {
             // Heap is full, find the largest importance element
-            int largestIndex = 1;
-            for (int i = 2; i <= size; i++) {
+            int largestIndex = 0;
+            for (int i = 1; i < size; i++) {
                 if (Heap[i].getImportance() > Heap[largestIndex].getImportance()) {
                     largestIndex = i;
                 }
             }
+
+            if(element.getImportance() == 8) {
+                System.out.println("Largest Index for inserting 8: " + largestIndex);
+            }
     
-            // Compare and replace if the new element has smaller importance
             if (element.getImportance() < Heap[largestIndex].getImportance()) {
                 Heap[largestIndex] = element;
-                minHeapify(largestIndex); // Reheapify the heap
+                minHeapify(largestIndex); // Reheapify the heap after replacement
             } else {
                 System.out.println("Element with higher importance not inserted: " + element.getImportance());
             }
@@ -88,9 +98,9 @@ public class MinHeap {
     
 
     public void print() {
-        for (int i = 1; i <= size / 2; i++) {
-            String leftChild = (2 * i <= size) ? Heap[2 * i].getImportance() + "" : "null";
-            String rightChild = (2 * i + 1 <= size) ? Heap[2 * i + 1].getImportance() + "" : "null";
+        for (int i = 0; i <= size / 2; i++) {
+            String leftChild = ((2 * i) + 1 < size) ? Heap[(2 * i) + 1].getImportance() + "" : "null";
+            String rightChild = ((2 * i) + 2 < size) ? Heap[(2 * i) + 2].getImportance() + "" : "null";
             System.out.println(
                 "PARENT : " + Heap[i].getImportance()
                 + " LEFT CHILD : " + leftChild
@@ -106,7 +116,8 @@ public class MinHeap {
         }
 
         Element popped = Heap[FRONT];
-        Heap[FRONT] = Heap[size--];
+        Heap[FRONT] = Heap[size-1];
+        size--;
         minHeapify(FRONT);
         return popped;
     }
@@ -114,7 +125,7 @@ public class MinHeap {
     public static void main(String[] arg) {
         System.out.println("The Min Heap is ");
     
-        MinHeap minHeap = new MinHeap(5);
+        MinHeap minHeap = new MinHeap(15); // Increased size to accommodate more elements
     
         // Inserting Elements with different 'importance' values
         Element e1 = new Element('a', 5);
@@ -144,6 +155,24 @@ public class MinHeap {
         Element e9 = new Element('i', 9);
         e9.importance = 8;
     
+        Element e10 = new Element('j', 12);
+        e10.importance = 12;
+    
+        Element e11 = new Element('k', 8);
+        e11.importance = 18;
+    
+        Element e12 = new Element('l', 7);
+        e12.importance = 7;
+    
+        Element e13 = new Element('m', 14);
+        e13.importance = 28;
+    
+        Element e14 = new Element('n', 21);
+        e14.importance = 3;
+    
+        Element e15 = new Element('o', 25);
+        e15.importance = 40;
+    
         // Insert elements into the heap
         minHeap.insert(e1);
         minHeap.insert(e2);
@@ -154,12 +183,27 @@ public class MinHeap {
         minHeap.insert(e7);
         minHeap.insert(e8);
         minHeap.insert(e9);
+        minHeap.insert(e10);
+        minHeap.insert(e11);
+        minHeap.insert(e12);
+        minHeap.insert(e13);
+        minHeap.insert(e14);
+        minHeap.insert(e15);
     
         // Print heap contents
         minHeap.print();
     
-        // Removing minimum value based on importance
+        // Removing minimum values based on importance
         System.out.println("The Min val is " + minHeap.remove().importance);
-    }
+        minHeap.print();
+
+        System.out.println("The Min val is " + minHeap.remove().importance);
+        minHeap.print();
+
+        System.out.println("The Min val is " + minHeap.remove().importance);
+
     
+        // Print heap contents again
+        minHeap.print();
+    }
 }

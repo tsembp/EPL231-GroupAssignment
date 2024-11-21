@@ -56,7 +56,7 @@ public class Tester {
                 String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
                 for (String word : words) {
                     // Clean the word by removing unwanted punctuation
-                    String cleanWord = word.replaceAll("[\"“”.,]", "");
+                    String cleanWord = word.replaceAll("[\"“”.,?}{-]", "");
                     if (!cleanWord.isEmpty()) {
                         // Write the cleaned word with a punctuation mark to the output file
                         bw.write(cleanWord + ". ");
@@ -71,26 +71,26 @@ public class Tester {
             e.printStackTrace();
         }
 
-        // // Step 2: Read the file again to detect words with '.' or ',' and search them in the Trie
-        // try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-        //     String line;
-        //     while ((line = br.readLine()) != null) {
-        //         String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
-        //         for (String word : words) {
-        //             if (word.endsWith(".") || word.endsWith(",")) {
-        //                 String cleanWord = word.replaceAll("[.,]", ""); // Remove punctuation
-        //                 boolean found = tree.search(cleanWord);
-        //                 if (!found) {
-        //                     System.out.println("Word not found: " + cleanWord);
-        //                 } else{
+        // Step 2: Read the file again to detect words with '.' or ',' and search them in the Trie
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
+                for (String word : words) {
+                    if (word.endsWith(".") || word.endsWith(",")) {
+                        String cleanWord = word.replaceAll("[.,?}{-]", ""); // Remove punctuation
+                        boolean found = tree.search(cleanWord);
+                        if (!found) {
+                            System.out.println("Word not found: " + cleanWord);
+                        } else{
                             
-        //                 }
-        //             }
-        //         }
-        //     }
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
