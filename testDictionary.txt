@@ -13,3 +13,7 @@ play
 clan
 plum 
 span
+pan
+lan
+aplans
+plains

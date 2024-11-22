@@ -1,6 +1,6 @@
 public class MinHeap {
 
-    private Element[] Heap;
+    public Element[] Heap;
     private int size;
     private int maxsize;
 
@@ -16,7 +16,7 @@ public class MinHeap {
     }
 
     private int parent(int pos) {
-        return pos / 2;
+        return (pos - 1) / 2;
     }
 
     private int leftChild(int pos) {
@@ -53,7 +53,7 @@ public class MinHeap {
                 }
             }
 
-            if(Heap[parent(pos)].importance > Heap[smallest].importance && isLeaf(pos)) {
+            if(Heap[parent(pos)].importance > Heap[smallest].importance) {
                 swap(pos, parent(pos));
             }
 
@@ -129,6 +129,18 @@ public class MinHeap {
         size--;
         minHeapify(FRONT);
         return popped;
+    }
+
+    public boolean search(Element element) {
+        // Iterate over the heap array
+        for (int i = 0; i < size; i++) {
+            // Check if the current element matches the target key
+            if (Heap[i].word == element.word) {
+                return true; // Return the true if element already exists
+            }
+        }
+        // If no element is found, return null
+        return false;
     }
 
     // public static void main(String[] arg) {

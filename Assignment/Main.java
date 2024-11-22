@@ -48,7 +48,7 @@ public class Main {
 
 
         /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
-        String filename = "script.txt"; // Replace with the path to your file
+        String filename = "outputScript_with_spaces.txt"; // Replace with the path to your file
         String outputFile = "scriptEdited.txt";
 
         // Step 1: Read words from the file, clean them, and write to the output file
@@ -63,15 +63,11 @@ public class Main {
                     String cleanWord = word.replaceAll("[\"“”.,?}{-]", "");
                     if (!cleanWord.isEmpty()) {
                         // Write the cleaned word with a punctuation mark to the output file
-                        // bw.write(cleanWord + ". ");
                         tree.searchImportance(cleanWord);
                     }
                 }
-                // Add a newline after processing each line
-                bw.newLine();
             }
             
-            System.out.println("Processing completed. Cleaned words are written to " + outputFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -146,12 +142,12 @@ public class Main {
         // Now current is pointing at the node in which the searchWord's last letter is at
 
         // RobinHoodHashing hash = current.hash;
-        StringBuilder str = new StringBuilder(searchWord);
+        StringBuilder str1 = new StringBuilder(searchWord);
+        StringBuilder str2 = new StringBuilder();
         MinHeap heap = new MinHeap(k);
-        traverseTrie(current, searchWord, str, heap, 1);
-        traverseTrie(current, searchWord, str, heap, 2);
-
-
+        traverseTrie(current, searchWord, str1, heap, 1); // Find the prefix first
+        traverseTrie(dictionaryTree, searchWord, str2, heap, 2); // Search the whole tree
+        traverseTrie(dictionaryTree, searchWord, str2, heap, 3); 
 
         heap.print();
 
@@ -184,20 +180,40 @@ public class Main {
                             // If heap is full, replace the root element with the current element (if criteria 2 applies)
                             if(currentWord.length() == searchWord.length()){
                                 boolean criteria2Result = differentByTwoChars(currentWord.toString(), searchWord);
-                                if(criteria2Result){
-                                    System.out.println("found " + currentWord.toString() + " and " + searchWord + " differ!!");
-                                }
                                 // If the two words differ by two AND element's importance is less => replace with heap's root
                                 if(criteria2Result && element.getImportance() > heap.getRootImportance()){
-                                    heap.remove();
-                                    heap.insert(element);
+                                    if(!heap.search(element)) { // If the element doesn't exist in the heap already insert it
+                                        heap.remove();
+                                        heap.insert(element);
+                                    }
                                 }
                             }
                         }
                         // CRITERIA 3
-                        else if(criteriaFlag == 3){
-
-                        } else{
+                        else if(criteriaFlag == 3) {
+                            if(isValidWord(searchWord, currentWord.toString())) { // If current word is valid
+                                System.out.println("Found valid word which is: " + currentWord.toString());
+                                if(currentWord.toString().equals("pan")) { 
+                                    System.out.println("Found pan with importance of: " + element.getImportance()); 
+                                    System.out.println("Current heap front is: " + heap.Heap[0].word + " with importance of: " + heap.Heap[0].getImportance());
+                                }
+                                if(element.getImportance() > heap.getRootImportance()) {
+                                    System.out.println("Printing heap before inserting: ");
+                                    heap.print();
+                                    System.out.println("Switching heap front: " + heap.Heap[0].word + " with " + element.getWord());
+                                    if(element.getWord().equals("pan")) {
+                                        System.out.println(heap.search(element));
+                                    }
+                                    if(!heap.search(element)) { // If the element doesn't exist in the heap already insert it
+                                        System.out.println("In removing");
+                                        heap.remove();
+                                        heap.insert(element);
+                                    }
+                                    System.out.println("Printing heap after inserting: ");
+                                    heap.print();
+                                }
+                            }
+                        } else {
                             System.out.println("Wrong criteria flag value passed in traverseTrie().");
                             return;
                         }
@@ -234,7 +250,43 @@ public class Main {
             }
         }
     
-        // Return true if exactly two characters are different
-        return diffCount == 2;
+        // Return true if the difference is less than or equal to 2 characters
+        return true;
+    }
+
+    public static boolean isValidWord(String inputWord, String suggestedWord) {
+        int inputLength = inputWord.length();
+        int suggestedLength = suggestedWord.length();
+    
+        // Check length constraint
+        if (suggestedLength > inputLength + 2 || suggestedLength < inputLength - 1) {
+            return false;
+        }
+    
+
+        if(suggestedLength < inputLength) { // If smaller
+            int i = 0;
+            int j = 0;
+            while(i < suggestedLength && j < inputLength) {
+                if(inputWord.charAt(j) == suggestedWord.charAt(i)) {
+                    j++;
+                    i++;
+                } else {
+                    j++;
+                }
+            }
+            return i == suggestedLength;
+        }
+        int i = 0;
+        int j = 0;
+        while(j < suggestedLength && i < inputLength) {
+            if(inputWord.charAt(i) == suggestedWord.charAt(j)) {
+                j++;
+                i++;
+            } else {
+                j++;
+            }
+        }
+        return i == inputLength;
     }
 }
