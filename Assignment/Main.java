@@ -148,14 +148,17 @@ public class Main {
         // RobinHoodHashing hash = current.hash;
         StringBuilder str = new StringBuilder(searchWord);
         MinHeap heap = new MinHeap(k);
-        traverseTrie(current, str, heap);
+        traverseTrie(current, searchWord, str, heap, 1);
+        traverseTrie(current, searchWord, str, heap, 2);
+
+
 
         heap.print();
 
         // return null;
     }
 
-    private static void traverseTrie(TrieNode node, StringBuilder currentWord, MinHeap heap) {
+    private static void traverseTrie(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag) {
         if(node == null) return;
 
         for(Element element : node.hash.table) {
@@ -165,20 +168,48 @@ public class Main {
 
                 // Check if isWord and add to storage data structure
                 if(element.isWord) {
+
                     if(heap.isFull()) {
-                        // If heap is full, replace root element with current element
-                        if(element.getImportance() > heap.getRootImportance()) {
-                            heap.remove();
-                            heap.insert(element);
+                        // CRITERIA 1
+                        if(criteriaFlag == 1){
+                            // We know that the currentWord is indeed a prefix of searchWord, so we just check their importance
+                            // If heap is full, replace root element with current element (if its importance is less)
+                            if(element.getImportance() > heap.getRootImportance()) {
+                                heap.remove();
+                                heap.insert(element);
+                            }
+                        }
+                        // CRITERIA 2
+                        else if (criteriaFlag == 2){
+                            // If heap is full, replace the root element with the current element (if criteria 2 applies)
+                            if(currentWord.length() == searchWord.length()){
+                                boolean criteria2Result = differentByTwoChars(currentWord.toString(), searchWord);
+                                if(criteria2Result){
+                                    System.out.println("found " + currentWord.toString() + " and " + searchWord + " differ!!");
+                                }
+                                // If the two words differ by two AND element's importance is less => replace with heap's root
+                                if(criteria2Result && element.getImportance() > heap.getRootImportance()){
+                                    heap.remove();
+                                    heap.insert(element);
+                                }
+                            }
+                        }
+                        // CRITERIA 3
+                        else if(criteriaFlag == 3){
+
+                        } else{
+                            System.out.println("Wrong criteria flag value passed in traverseTrie().");
+                            return;
                         }
                     } else {
                         heap.insert(element);
                     }
+
                 }
 
                 // Recursively traverse downwards
                 if (element.node != null) {
-                    traverseTrie(element.node, currentWord, heap);
+                    traverseTrie(element.node, searchWord, currentWord, heap, criteriaFlag);
                 }
 
                 // When recursion is complete, explore more paths from other elements in the hash table
@@ -186,5 +217,24 @@ public class Main {
 
             }
         }
+    }
+
+    private static boolean differentByTwoChars(String s1, String s2){
+        // No need to check for s1.length() and s2.length(), we checked that before
+        int diffCount = 0;
+
+        for (int i = 0; i < s1.length(); i++) {
+            if (s1.charAt(i) != s2.charAt(i)) {
+                diffCount++;
+            }
+    
+            // If more than two characters are different, return false early
+            if (diffCount > 2) {
+                return false;
+            }
+        }
+    
+        // Return true if exactly two characters are different
+        return diffCount == 2;
     }
 }

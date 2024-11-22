@@ -15,6 +15,10 @@ public class Element {
         word = "";
     }
 
+    public String getWord(){
+        return this. word;
+    }
+
     public int getProbeLength(){
         return this.probeLength;
     }
