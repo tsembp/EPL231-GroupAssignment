@@ -31,7 +31,15 @@ public class MinHeap {
         return pos > size / 2 && pos <= size; 
     }
 
-    // helper for minHeapify
+    public int getRootImportance(){
+        return Heap[FRONT].getImportance();
+    }
+
+    public boolean isFull(){
+        return size == maxsize;
+    }
+
+    // Helper method for minHeapify | Swaps elements
     private void swap(int fpos, int spos) {
         Element tmp = Heap[fpos];
         Heap[fpos] = Heap[spos];
@@ -61,7 +69,7 @@ public class MinHeap {
                 swap(pos, smallest);
                 minHeapify(smallest);
             }
-        }
+    }
 
     public void insert(Element element) {
         if (size < maxsize) {
@@ -96,38 +104,21 @@ public class MinHeap {
         //     }
         // }
     }
-    
-    public boolean isFull(){
-        return size == maxsize;
-    }
-
-    public int getRootImportance(){
-        return Heap[FRONT].getImportance();
-    }
-
-
-    public void print() {
-        for (int i = 0; i <= size / 2; i++) {
-            String leftChild = ((2 * i) + 1 < size) ? Heap[(2 * i) + 1].word + "" : "null";
-            String rightChild = ((2 * i) + 2 < size) ? Heap[(2 * i) + 2].word + "" : "null";
-            System.out.println(
-                "PARENT : " + Heap[i].word
-                + " LEFT CHILD : " + leftChild
-                + " RIGHT CHILD : " + rightChild
-            );
-        }
-    }
 
     public Element remove() {
-        if (size == 0) {
+        if (size == 0) { // Check for empty heap
             System.out.println("Heap is empty");
             return null;
         }
 
+        // Get element at Heap[FRONT] and replace it with the last
         Element popped = Heap[FRONT];
         Heap[FRONT] = Heap[size-1];
         size--;
+
+        // Percolate down the last element which now is at the root
         minHeapify(FRONT);
+
         return popped;
     }
 
@@ -139,8 +130,21 @@ public class MinHeap {
                 return true; // Return the true if element already exists
             }
         }
+        
         // If no element is found, return null
         return false;
+    }
+
+    public void print() {
+        for (int i = 0; i <= size / 2; i++) {
+            String leftChild = ((2 * i) + 1 < size) ? Heap[(2 * i) + 1].word + "" : "null";
+            String rightChild = ((2 * i) + 2 < size) ? Heap[(2 * i) + 2].word + "" : "null";
+            System.out.println(
+                "PARENT : " + Heap[i].word
+                + " LEFT CHILD : " + leftChild
+                + " RIGHT CHILD : " + rightChild
+            );
+        }
     }
 
     // public static void main(String[] arg) {
@@ -227,6 +231,5 @@ public class MinHeap {
     //     // Print heap contents again
     //     minHeap.print();
     // }
-
 
 }

@@ -108,7 +108,7 @@ public class Main {
             try {
                 k = Integer.parseInt(scanner.nextLine());
 
-                prefix(word, k, tree);
+                findRelevantWords(word, k, tree);
                 
 
 
@@ -123,7 +123,7 @@ public class Main {
         scanner.close();
     }
 
-    public static void prefix(String searchWord, int k, TrieNode dictionaryTree ){
+    public static void findRelevantWords(String searchWord, int k, TrieNode dictionaryTree ){
         // Element[] altWords = new Element[k];
 
         if(!dictionaryTree.search(searchWord)){
@@ -145,13 +145,144 @@ public class Main {
         StringBuilder str1 = new StringBuilder(searchWord);
         StringBuilder str2 = new StringBuilder();
         MinHeap heap = new MinHeap(k);
-        traverseTrie(current, searchWord, str1, heap, 1); // Find the prefix first
-        traverseTrie(dictionaryTree, searchWord, str2, heap, 2); // Search the whole tree
-        traverseTrie(dictionaryTree, searchWord, str2, heap, 3); 
+        traverseTrie(current, searchWord, str1, heap, 1); // Find words that adhere to criteria 1
+        traverseTrie(dictionaryTree, searchWord, str2, heap, 2); // Find words that adhere to criteria 2
+        traverseTrie(dictionaryTree, searchWord, str2, heap, 3); // Find words that adhere to criteria 3
 
         heap.print();
 
-        // return null;
+    }
+
+    private static void findWordsCriteria1(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag){
+        if(node == null) return;
+
+        for(Element element : node.hash.table) {
+            if(element != null) {
+                // Append element key at the word
+                currentWord.append(element.key);
+
+                // Check if isWord and add to storage data structure
+                if(element.isWord) {
+
+                    if(heap.isFull()) {
+                        // We know that the currentWord is indeed a prefix of searchWord, so we just check their importance
+                        // If heap is full, replace root element with current element (if its importance is less)
+                        if(element.getImportance() > heap.getRootImportance()) {
+                            heap.remove();
+                            heap.insert(element);
+                        }
+                    } else {
+                        heap.insert(element);
+                    }
+
+                }
+
+                // Recursively traverse downwards
+                if (element.node != null) {
+                    traverseTrie(element.node, searchWord, currentWord, heap, criteriaFlag);
+                }
+
+                // When recursion is complete, explore more paths from other elements in the hash table
+                currentWord.deleteCharAt(currentWord.length() - 1);
+            }
+        }
+    }
+
+    private static void findWordsCriteria2(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag){
+        if (node == null) return;
+    
+        // Stop traversal if the current word exceeds the length of searchWord
+        if (currentWord.length() > searchWord.length()) {
+            return;  // No need to explore further if the word is longer
+        }
+    
+        // Check for words with the same length as searchWord
+        if (currentWord.length() == searchWord.length()) {
+            // Check if the word differs by at most two characters
+            for (Element element : node.hash.table) {
+                if (element != null) {
+                    // Only consider elements that are words and have the same length as the searchWord
+                    if (element.isWord && differentByTwoChars(currentWord.toString(), searchWord)) {
+                        // If heap is full, compare the current word's importance with the heap's root
+                        if (heap.isFull()) {
+                            if (element.getImportance() > heap.getRootImportance()) {
+                                heap.remove();
+                                heap.insert(element);
+                            }
+                        } else {
+                            // If heap is not full, simply insert the element
+                            heap.insert(element);
+                        }
+                    }
+                }
+            }
+        }
+    
+        // Continue recursively traversing the Trie for other possible words
+        for (Element element : node.hash.table) {
+            if (element != null) {
+                currentWord.append(element.key);  // Append current character to the word
+    
+                // Recursively traverse the Trie for the next level of nodes
+                if (element.node != null) {
+                    findWordsCriteria2(element.node, searchWord, currentWord, heap, criteriaFlag);
+                }
+    
+                // Backtrack by removing the last character
+                currentWord.deleteCharAt(currentWord.length() - 1);
+            }
+        }
+    }
+    
+    private static void findWordsCriteria3(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag) {
+        if(node == null) return;
+
+        for(Element element : node.hash.table) {
+            if(element != null) {
+                // Append element key at the word
+                currentWord.append(element.key);
+
+                // Check if isWord and add to storage data structure
+                if(element.isWord) {
+
+                    if(heap.isFull()) {
+                        if(isValidWord(searchWord, currentWord.toString())) { // If current word is valid
+                            System.out.println("Found valid word which is: " + currentWord.toString());
+                            if(currentWord.toString().equals("pan")) { 
+                                System.out.println("Found pan with importance of: " + element.getImportance()); 
+                                System.out.println("Current heap front is: " + heap.Heap[0].word + " with importance of: " + heap.Heap[0].getImportance());
+                            }
+                            if(element.getImportance() > heap.getRootImportance()) {
+                                System.out.println("Printing heap before inserting: ");
+                                heap.print();
+                                System.out.println("Switching heap front: " + heap.Heap[0].word + " with " + element.getWord());
+                                if(element.getWord().equals("pan")) {
+                                    System.out.println(heap.search(element));
+                                }
+                                if(!heap.search(element)) { // If the element doesn't exist in the heap already insert it
+                                    System.out.println("In removing");
+                                    heap.remove();
+                                    heap.insert(element);
+                                }
+                                System.out.println("Printing heap after inserting: ");
+                                heap.print();
+                            }
+                        }
+                    } else {
+                        heap.insert(element);
+                    }
+
+                }
+
+                // Recursively traverse downwards
+                if (element.node != null) {
+                    traverseTrie(element.node, searchWord, currentWord, heap, criteriaFlag);
+                }
+
+                // When recursion is complete, explore more paths from other elements in the hash table
+                currentWord.deleteCharAt(currentWord.length() - 1);
+            }
+        }
     }
 
     private static void traverseTrie(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag) {
@@ -230,7 +361,6 @@ public class Main {
 
                 // When recursion is complete, explore more paths from other elements in the hash table
                 currentWord.deleteCharAt(currentWord.length() - 1);
-
             }
         }
     }
@@ -254,7 +384,7 @@ public class Main {
         return true;
     }
 
-    public static boolean isValidWord(String inputWord, String suggestedWord) {
+    private static boolean isValidWord(String inputWord, String suggestedWord) {
         int inputLength = inputWord.length();
         int suggestedLength = suggestedWord.length();
     
@@ -289,4 +419,5 @@ public class Main {
         }
         return i == inputLength;
     }
+
 }

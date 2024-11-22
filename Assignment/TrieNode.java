@@ -13,9 +13,8 @@ public class TrieNode {
 		int finalIndex = 0;
 
 		for(int i=0; i < key.length(); i++){
-
 			char c = key.charAt(i);
-
+			
 			int index = current.hash.getIndex(c);
 			if(index == -1){ // c is not in current.hash
 				current.hash.insert(c); // insert c into current.hash
@@ -28,15 +27,14 @@ public class TrieNode {
 				current.hash.table[index].node = new TrieNode();
 			}
 			
-			// finalIndex = index;
+			// If we reach the last character in the string, break to keep the current node's reference
+			if(i == (key.length() - 1)) break;
+
 			// Move to next node
-			if(i == (key.length() - 1)) {
-				break;
-			}
 			current = current.hash.table[index].node;
 		}
 
-		// Look for end of word to mark it with isWord = true
+		// Look for end of word and mark it with isWord = true and assign element.word field
 		finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
 		if (finalIndex != -1 && current.hash.table[finalIndex] != null) {
 			current.hash.table[finalIndex].isWord = true;
@@ -50,9 +48,7 @@ public class TrieNode {
 
 		// Iterate over every character of string
 		for(int i=0; i < key.length(); i++){
-
 			char c = key.charAt(i);
-			
 
 			int index = current.hash.getIndex(c);
 			if(index == -1){ // character not found => word doesnt exist
@@ -64,18 +60,18 @@ public class TrieNode {
 				return false;
 			}
 
-			// Move to next node
-			// if(key.equals("has")) current.hash.printHash();
+			// If we reach the last character in the string, break to keep the current node's reference
 			if(i == key.length() - 1) { 
 				finalIndex = index;
 				break;
 			}
+
+			// Move to next node
 			current = current.hash.table[index].node;
 		}
 
-
-		// int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
-		return finalIndex != -1 && current.hash.table[finalIndex] != null && current.hash.table[finalIndex].isWord && current.hash.table[finalIndex].word.equals(key);
+		return finalIndex != -1 && current.hash.table[finalIndex] != null 
+				&& current.hash.table[finalIndex].isWord && current.hash.table[finalIndex].word.equals(key);
 	}
 
 	public boolean search(String key, boolean flag) {
@@ -91,18 +87,21 @@ public class TrieNode {
 				return false;
 			}
 
-			// doesnt exist
+			// Word doesn't exist
 			if (current.hash.table[index].node == null) {
 				return false;
 			}
 
-			// Move to next node
+			// If we reach the last character in the string, break to keep the current node's reference
 			if(j == key.length() - 1) break;
+
+			// Move to next node
 			current = current.hash.table[index].node;
 		}
 
 		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
-		return finalIndex != -1 && current.hash.table[finalIndex] != null && current.hash.table[finalIndex].isWord;
+		return finalIndex != -1 && current.hash.table[finalIndex] != null 
+				&& current.hash.table[finalIndex].isWord;
 	}
 
 	public void searchImportance(String key) {
@@ -110,16 +109,18 @@ public class TrieNode {
 
 		// Iterate over every character of string
 		for(int i=0; i < key.length(); i++){
-
 			char c = key.charAt(i);
 
+			// Get 'c's index
 			int index = current.hash.getIndex(c);
 			if(index == -1 || current.hash.table[index].node == null){ // character not found => word doesnt exist
 				return;
 			}
 
-			// Move to next node
+			// If we reach the last character in the string, break to keep the current node's reference
 			if(i == key.length() - 1) break;
+
+			// Move to next node
 			current = current.hash.table[index].node;
 		}
 
