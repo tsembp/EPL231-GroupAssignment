@@ -136,7 +136,7 @@ public class MinHeap {
     }
 
     public void print() {
-        for (int i = 0; i <= size / 2; i++) {
+        for (int i = 0; i < size / 2; i++) {
             String leftChild = ((2 * i) + 1 < size) ? Heap[(2 * i) + 1].word + "" : "null";
             String rightChild = ((2 * i) + 2 < size) ? Heap[(2 * i) + 2].word + "" : "null";
             System.out.println(

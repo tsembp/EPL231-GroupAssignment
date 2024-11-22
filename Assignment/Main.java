@@ -7,6 +7,9 @@ import java.util.Scanner;
 
 public class Main {
 
+    static int recursiveCalls1 = 0;
+    static int recursiveCalls2 = 0;
+
     public static void main(String[] args) {
 
         /* CONSTRUCT DICTIONARY FILE */
@@ -145,12 +148,26 @@ public class Main {
         StringBuilder str1 = new StringBuilder(searchWord);
         StringBuilder str2 = new StringBuilder();
         MinHeap heap = new MinHeap(k);
+
         traverseTrie(current, searchWord, str1, heap, 1); // Find words that adhere to criteria 1
         traverseTrie(dictionaryTree, searchWord, str2, heap, 2); // Find words that adhere to criteria 2
         traverseTrie(dictionaryTree, searchWord, str2, heap, 3); // Find words that adhere to criteria 3
-
         heap.print();
 
+        StringBuilder str3 = new StringBuilder(searchWord);
+        StringBuilder str4 = new StringBuilder();
+        MinHeap heap2 = new MinHeap(k);
+
+        findWordsCriteria1(current, searchWord, str3, heap2, 1); // Find words that adhere to criteria 1
+        findWordsCriteria2(dictionaryTree, searchWord, str4, heap2, 2); // Find words that adhere to criteria 2
+        findWordsCriteria3(dictionaryTree, searchWord, str4, heap2, 3); // Find words that adhere to criteria 3
+
+        System.out.println();
+
+        heap2.print();
+
+        System.out.println("Recursive calls 1: " + recursiveCalls1);
+        System.out.println("Recursive calls 2: " + recursiveCalls2);
     }
 
     private static void findWordsCriteria1(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag){
@@ -179,7 +196,7 @@ public class Main {
 
                 // Recursively traverse downwards
                 if (element.node != null) {
-                    traverseTrie(element.node, searchWord, currentWord, heap, criteriaFlag);
+                    findWordsCriteria1(element.node, searchWord, currentWord, heap, criteriaFlag);
                 }
 
                 // When recursion is complete, explore more paths from other elements in the hash table
@@ -190,39 +207,31 @@ public class Main {
 
     private static void findWordsCriteria2(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag){
         if (node == null) return;
+
+        // recursiveCalls2++;
     
         // Stop traversal if the current word exceeds the length of searchWord
         if (currentWord.length() > searchWord.length()) {
             return;  // No need to explore further if the word is longer
         }
-    
-        // Check for words with the same length as searchWord
-        if (currentWord.length() == searchWord.length()) {
-            // Check if the word differs by at most two characters
-            for (Element element : node.hash.table) {
-                if (element != null) {
-                    // Only consider elements that are words and have the same length as the searchWord
-                    if (element.isWord && differentByTwoChars(currentWord.toString(), searchWord)) {
-                        // If heap is full, compare the current word's importance with the heap's root
-                        if (heap.isFull()) {
-                            if (element.getImportance() > heap.getRootImportance()) {
-                                heap.remove();
-                                heap.insert(element);
-                            }
-                        } else {
-                            // If heap is not full, simply insert the element
-                            heap.insert(element);
-                        }
-                    }
-                }
-            }
-        }
-    
+
         // Continue recursively traversing the Trie for other possible words
         for (Element element : node.hash.table) {
             if (element != null) {
                 currentWord.append(element.key);  // Append current character to the word
-    
+
+                if(element.isWord) {
+                    if(currentWord.length() == searchWord.length()){
+                        boolean criteria2Result = differentByTwoChars(currentWord.toString(), searchWord);
+                        // If the two words differ by two AND element's importance is less => replace with heap's root
+                        if(criteria2Result && element.getImportance() > heap.getRootImportance()){
+                            if(!heap.search(element)) { // If the element doesn't exist in the heap already insert it
+                                heap.remove();
+                                heap.insert(element);
+                            }
+                        }
+                    }
+                }
                 // Recursively traverse the Trie for the next level of nodes
                 if (element.node != null) {
                     findWordsCriteria2(element.node, searchWord, currentWord, heap, criteriaFlag);
@@ -237,6 +246,12 @@ public class Main {
     private static void findWordsCriteria3(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag) {
         if(node == null) return;
 
+        recursiveCalls2++;
+
+        if(currentWord.length() > searchWord.length() + 2) {
+            return;
+        }
+
         for(Element element : node.hash.table) {
             if(element != null) {
                 // Append element key at the word
@@ -247,25 +262,11 @@ public class Main {
 
                     if(heap.isFull()) {
                         if(isValidWord(searchWord, currentWord.toString())) { // If current word is valid
-                            System.out.println("Found valid word which is: " + currentWord.toString());
-                            if(currentWord.toString().equals("pan")) { 
-                                System.out.println("Found pan with importance of: " + element.getImportance()); 
-                                System.out.println("Current heap front is: " + heap.Heap[0].word + " with importance of: " + heap.Heap[0].getImportance());
-                            }
                             if(element.getImportance() > heap.getRootImportance()) {
-                                System.out.println("Printing heap before inserting: ");
-                                heap.print();
-                                System.out.println("Switching heap front: " + heap.Heap[0].word + " with " + element.getWord());
-                                if(element.getWord().equals("pan")) {
-                                    System.out.println(heap.search(element));
-                                }
                                 if(!heap.search(element)) { // If the element doesn't exist in the heap already insert it
-                                    System.out.println("In removing");
                                     heap.remove();
                                     heap.insert(element);
                                 }
-                                System.out.println("Printing heap after inserting: ");
-                                heap.print();
                             }
                         }
                     } else {
@@ -276,7 +277,7 @@ public class Main {
 
                 // Recursively traverse downwards
                 if (element.node != null) {
-                    traverseTrie(element.node, searchWord, currentWord, heap, criteriaFlag);
+                    findWordsCriteria3(element.node, searchWord, currentWord, heap, criteriaFlag);
                 }
 
                 // When recursion is complete, explore more paths from other elements in the hash table
@@ -287,6 +288,14 @@ public class Main {
 
     private static void traverseTrie(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag) {
         if(node == null) return;
+
+        // if(criteriaFlag == 2) {
+        //     recursiveCalls1++;
+        // }
+
+        if(criteriaFlag == 3) {
+            recursiveCalls1++;
+        }
 
         for(Element element : node.hash.table) {
             if(element != null) {
@@ -323,25 +332,11 @@ public class Main {
                         // CRITERIA 3
                         else if(criteriaFlag == 3) {
                             if(isValidWord(searchWord, currentWord.toString())) { // If current word is valid
-                                System.out.println("Found valid word which is: " + currentWord.toString());
-                                if(currentWord.toString().equals("pan")) { 
-                                    System.out.println("Found pan with importance of: " + element.getImportance()); 
-                                    System.out.println("Current heap front is: " + heap.Heap[0].word + " with importance of: " + heap.Heap[0].getImportance());
-                                }
                                 if(element.getImportance() > heap.getRootImportance()) {
-                                    System.out.println("Printing heap before inserting: ");
-                                    heap.print();
-                                    System.out.println("Switching heap front: " + heap.Heap[0].word + " with " + element.getWord());
-                                    if(element.getWord().equals("pan")) {
-                                        System.out.println(heap.search(element));
-                                    }
                                     if(!heap.search(element)) { // If the element doesn't exist in the heap already insert it
-                                        System.out.println("In removing");
                                         heap.remove();
                                         heap.insert(element);
                                     }
-                                    System.out.println("Printing heap after inserting: ");
-                                    heap.print();
                                 }
                             }
                         } else {
