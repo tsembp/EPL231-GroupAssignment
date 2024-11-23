@@ -105,7 +105,7 @@ public class TrieNodeStatic {
 	public static void main(String args[]) {
 		/* CONSTRUCT DICTIONARY FILE */
         TrieNodeStatic tree = new TrieNodeStatic();
-        String dictionary = "testDictionary.txt"; // Replace with the path to your file
+        String dictionary = "./Dictionaries/Same Length/100000.txt"; // Replace with the path to your file
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
@@ -138,31 +138,31 @@ public class TrieNodeStatic {
             e.printStackTrace();
         }
 
-		/* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
-        String filename = "outputScript_with_spaces.txt"; // Replace with the path to your file
+		// /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
+        // String filename = "outputScript_with_spaces.txt"; // Replace with the path to your file
 
-        // Step 1: Read words from the file, clean them, and write to the output file
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+        // // Step 1: Read words from the file, clean them, and write to the output file
+        // try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
-                for (String word : words) {
-                    // Clean the word by removing unwanted punctuation
-                    String cleanWord = word.replaceAll("[\"“”.,?}{-]", "");
-                    if (!cleanWord.isEmpty()) {
-                        searchImportance(tree, cleanWord);
-                    }
-                }
-            }
+        //     String line;
+        //     while ((line = br.readLine()) != null) {
+        //         String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
+        //         for (String word : words) {
+        //             // Clean the word by removing unwanted punctuation
+        //             String cleanWord = word.replaceAll("[\"“”.,?}{-]", "");
+        //             if (!cleanWord.isEmpty()) {
+        //                 searchImportance(tree, cleanWord);
+        //             }
+        //         }
+        //     }
             
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
 
-		 // Print the importance of each word
-		 System.out.println("Words and their importance:");
-		 printImportance(tree, new StringBuilder());
+		//  // Print the importance of each word
+		//  System.out.println("Words and their importance:");
+		//  printImportance(tree, new StringBuilder());
 
 		
 	}

@@ -15,7 +15,7 @@ public class Main {
 
         /* CONSTRUCT DICTIONARY FILE */
         TrieNode tree = new TrieNode();
-        String dictionary = "dictionary.txt"; // Replace with the path to your file
+        String dictionary = "./Dictionaries/Same Length/100000.txt"; // Replace with the path to your file
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
@@ -39,59 +39,62 @@ public class Main {
                 word = word.toLowerCase();
                 if (!word.isEmpty()) {
                     boolean found = tree.search(word);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
-        String filename = "outputScript_with_spaces.txt"; // Replace with the path to your file
-        String outputFile = "scriptEdited.txt";
-
-        // Step 1: Read words from the file, clean them, and write to the output file
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
-                for (String word : words) {
-                    // Clean the word by removing unwanted punctuation
-                    String cleanWord = word.replaceAll("[\"“”.,?}{-]", "");
-                    if (!cleanWord.isEmpty()) {
-                        tree.searchImportance(cleanWord);
+                    if(!found){
+                        System.out.println("Word not found: " + word);
                     }
                 }
             }
-            
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        Scanner scanner = new Scanner(System.in);
-        String word = "";
-        int k = 0;
 
-        while(true){
-            System.out.print("Enter a word (or 'exit' to end): ");
-            word = scanner.nextLine();
+        // /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
+        // String filename = "outputScript_with_spaces.txt"; // Replace with the path to your file
+        // String outputFile = "scriptEdited.txt";
 
-            if(word.equals("exit")){
-                System.out.println("End of program.");
-                break;
-            }
+        // // Step 1: Read words from the file, clean them, and write to the output file
+        // try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            
+        //     String line;
+        //     while ((line = br.readLine()) != null) {
+        //         String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
+        //         for (String word : words) {
+        //             // Clean the word by removing unwanted punctuation
+        //             String cleanWord = word.replaceAll("[\"“”.,?}{-]", "");
+        //             if (!cleanWord.isEmpty()) {
+        //                 tree.searchImportance(cleanWord);
+        //             }
+        //         }
+        //     }
+            
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
 
-            System.out.println("Enter number of alternative words (k): ");
-            try {
-                k = Integer.parseInt(scanner.nextLine());
-                findRelevantWords(word, k, tree);
-            } catch (NumberFormatException e) {
-                System.out.println("Please insert a valid number.");
-            }
-            System.out.println(); 
-        }
-        scanner.close();
+        // Scanner scanner = new Scanner(System.in);
+        // String word = "";
+        // int k = 0;
+
+        // while(true){
+        //     System.out.print("Enter a word (or 'exit' to end): ");
+        //     word = scanner.nextLine();
+
+        //     if(word.equals("exit")){
+        //         System.out.println("End of program.");
+        //         break;
+        //     }
+
+        //     System.out.println("Enter number of alternative words (k): ");
+        //     try {
+        //         k = Integer.parseInt(scanner.nextLine());
+        //         findRelevantWords(word, k, tree);
+        //     } catch (NumberFormatException e) {
+        //         System.out.println("Please insert a valid number.");
+        //     }
+        //     System.out.println(); 
+        // }
+        // scanner.close();
     }
 
     public static void findRelevantWords(String searchWord, int k, TrieNode dictionaryTree ){
