@@ -92,7 +92,6 @@ public class MinHeap {
 
         // Percolate down the last element which now is at the root
         minHeapify(FRONT);
-
         return popped;
     }
 
@@ -104,7 +103,6 @@ public class MinHeap {
                 return true; // Return the true if element already exists
             }
         }
-        
         // If no element is found, return null
         return false;
     }

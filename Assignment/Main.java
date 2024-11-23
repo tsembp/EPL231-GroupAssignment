@@ -7,8 +7,9 @@ import java.util.Scanner;
 
 public class Main {
 
-    static int recursiveCalls1 = 0;
+    static int recursiveCallsTraverse = 0;
     static int recursiveCalls2 = 0;
+    static int recursiveCalls3 = 0;
 
     public static void main(String[] args) {
 
@@ -38,11 +39,6 @@ public class Main {
                 word = word.toLowerCase();
                 if (!word.isEmpty()) {
                     boolean found = tree.search(word);
-                    // System.out.println("Searching \"" + word + "\". Found = " + found);
-                    if(!found) {
-                        // System.out.println("Word not found: " + word);
-                        boolean testo = tree.search(word, found);
-                    }
                 }
             }
         } catch (IOException e) {
@@ -55,8 +51,7 @@ public class Main {
         String outputFile = "scriptEdited.txt";
 
         // Step 1: Read words from the file, clean them, and write to the output file
-        try (BufferedReader br = new BufferedReader(new FileReader(filename));
-             BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             
             String line;
             while ((line = br.readLine()) != null) {
@@ -65,7 +60,6 @@ public class Main {
                     // Clean the word by removing unwanted punctuation
                     String cleanWord = word.replaceAll("[\"“”.,?}{-]", "");
                     if (!cleanWord.isEmpty()) {
-                        // Write the cleaned word with a punctuation mark to the output file
                         tree.searchImportance(cleanWord);
                     }
                 }
@@ -74,25 +68,6 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-        // // Step 2: Read the file again to detect words with '.' or ',' and search them in the Trie
-        // try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-        //     String line;
-        //     while ((line = br.readLine()) != null) {
-        //         String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
-        //         for (String word : words) {
-        //             if (word.endsWith(".") || word.endsWith(",")) {
-        //                 String cleanWord = word.replaceAll("[.,?}{-]", ""); // Remove punctuation
-        //                 tree.searchImportance(cleanWord);
-        //             }
-        //         }
-        //     }
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
-        
 
         Scanner scanner = new Scanner(System.in);
         String word = "";
@@ -110,28 +85,18 @@ public class Main {
             System.out.println("Enter number of alternative words (k): ");
             try {
                 k = Integer.parseInt(scanner.nextLine());
-
                 findRelevantWords(word, k, tree);
-                
-
-
-                
             } catch (NumberFormatException e) {
                 System.out.println("Please insert a valid number.");
             }
-
             System.out.println(); 
         }
-
         scanner.close();
     }
 
     public static void findRelevantWords(String searchWord, int k, TrieNode dictionaryTree ){
-        // Element[] altWords = new Element[k];
-
         if(!dictionaryTree.search(searchWord)){
             System.out.println("Word " + searchWord + " not found (prefix method).");
-            // return null;
             return;
         } 
 
@@ -139,7 +104,6 @@ public class Main {
         TrieNode current = dictionaryTree;
         for(char c : searchWord.toCharArray()){
             int index = current.getHashTable().getIndex(c);
-
             current = current.getHashTable().getTable()[index].getNode();
         }
         // Now current is pointing at the node in which the searchWord's last letter is at
@@ -166,8 +130,9 @@ public class Main {
 
         heap2.print();
 
-        System.out.println("Recursive calls 1: " + recursiveCalls1);
-        System.out.println("Recursive calls 2: " + recursiveCalls2);
+        System.out.println("Recursvie calls in travserse: " + recursiveCallsTraverse);
+        System.out.println("Recursive calls in criteria 2: " + recursiveCalls2);
+        System.out.println("Recursive calls in criteria 3: " + recursiveCalls3);
     }
 
     private static void findWordsCriteria1(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag){
@@ -188,17 +153,13 @@ public class Main {
                             heap.remove();
                             heap.insert(element);
                         }
-                    } else {
-                        heap.insert(element);
-                    }
-
+                    } else { heap.insert(element); }
                 }
 
                 // Recursively traverse downwards
                 if (element.getNode() != null) {
                     findWordsCriteria1(element.getNode(), searchWord, currentWord, heap, criteriaFlag);
                 }
-
                 // When recursion is complete, explore more paths from other elements in the hash table
                 currentWord.deleteCharAt(currentWord.length() - 1);
             }
@@ -208,12 +169,10 @@ public class Main {
     private static void findWordsCriteria2(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag){
         if (node == null) return;
 
-        // recursiveCalls2++;
+        recursiveCalls2++;
     
         // Stop traversal if the current word exceeds the length of searchWord
-        if (currentWord.length() > searchWord.length()) {
-            return;  // No need to explore further if the word is longer
-        }
+        if (currentWord.length() > searchWord.length()) { return; } // No need to explore further if the word is longer
 
         // Continue recursively traversing the Trie for other possible words
         for (Element element : node.getHashTable().getTable()) {
@@ -246,11 +205,9 @@ public class Main {
     private static void findWordsCriteria3(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag) {
         if(node == null) return;
 
-        recursiveCalls2++;
+        recursiveCalls3++;
 
-        if(currentWord.length() > searchWord.length() + 2) {
-            return;
-        }
+        if(currentWord.length() > searchWord.length() + 2) { return; }
 
         for(Element element : node.getHashTable().getTable()) {
             if(element != null) {
@@ -269,10 +226,7 @@ public class Main {
                                 }
                             }
                         }
-                    } else {
-                        heap.insert(element);
-                    }
-
+                    } else { heap.insert(element); }
                 }
 
                 // Recursively traverse downwards
@@ -289,12 +243,8 @@ public class Main {
     private static void traverseTrie(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag) {
         if(node == null) return;
 
-        // if(criteriaFlag == 2) {
-        //     recursiveCalls1++;
-        // }
-
         if(criteriaFlag == 3) {
-            recursiveCalls1++;
+            recursiveCallsTraverse++;
         }
 
         for(Element element : node.getHashTable().getTable()) {
@@ -304,7 +254,6 @@ public class Main {
 
                 // Check if isWord and add to storage data structure
                 if(element.isWord()) {
-
                     if(heap.isFull()) {
                         // CRITERIA 1
                         if(criteriaFlag == 1){
@@ -343,10 +292,7 @@ public class Main {
                             System.out.println("Wrong criteria flag value passed in traverseTrie().");
                             return;
                         }
-                    } else {
-                        heap.insert(element);
-                    }
-
+                    } else { heap.insert(element); }
                 }
 
                 // Recursively traverse downwards
@@ -363,7 +309,6 @@ public class Main {
     private static boolean differentByTwoChars(String s1, String s2){
         // No need to check for s1.length() and s2.length(), we checked that before
         int diffCount = 0;
-
         for (int i = 0; i < s1.length(); i++) {
             if (s1.charAt(i) != s2.charAt(i)) {
                 diffCount++;
@@ -374,7 +319,6 @@ public class Main {
                 return false;
             }
         }
-    
         // Return true if the difference is less than or equal to 2 characters
         return true;
     }
@@ -387,8 +331,6 @@ public class Main {
         if (suggestedLength > inputLength + 2 || suggestedLength < inputLength - 1) {
             return false;
         }
-    
-
         if(suggestedLength < inputLength) { // If smaller
             int i = 0;
             int j = 0;

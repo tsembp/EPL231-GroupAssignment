@@ -87,18 +87,15 @@ public class RobinHoodHashing {
         int index = hashFunction(newElement.getKey());
 
         while (table[index] != null) {
-
             if (newElement.getProbeLength() > table[index].getProbeLength()) { // Switch elements
                 Element temp = table[index];
                 table[index] = newElement;
                 newElement = temp;
                 maxProbeLength = Math.max(maxProbeLength, table[index].getProbeLength());
             }
-
             newElement.incrementProbeLength(); // increase probeLength
             index = (index + 1) % size; // move to next index
         }
-
         table[index] = newElement; // insert element
         capacity++; // icrease capacity
         maxProbeLength = Math.max(maxProbeLength, newElement.getProbeLength()); // update maxProbeLength
@@ -128,11 +125,9 @@ public class RobinHoodHashing {
             if (table[index].getKey() == key) { // key found => return its index
                 return index;
             }
-
             index = (index + 1) % size; // move to next hash entry
             probeLength++; // increase probeLength to avoid useless iterations
         }
-
         return -1; // key not found
     }
 
