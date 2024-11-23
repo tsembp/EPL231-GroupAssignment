@@ -1,9 +1,13 @@
 public class TrieNode {
 	
-	public RobinHoodHashing hash;
+	private RobinHoodHashing hash;
 
 	public TrieNode() {
 		hash = new RobinHoodHashing();
+	}
+
+	public RobinHoodHashing getHashTable(){
+		return this.hash;
 	}
 	
 	public void insert(String key) {
@@ -22,23 +26,25 @@ public class TrieNode {
 			}
 
 
-			// Check if node at index is null => create one if yes
-			if (current.hash.table[index].node == null) {
-				current.hash.table[index].node = new TrieNode();
+			// Check if node of element at index is null => create one if yes
+			if (current.hash.getTable()[index].getNode() == null) {
+				// current.hash.table[index].node = new TrieNode();
+				current.hash.getTable()[index].setNode(new TrieNode());
+
 			}
 			
 			// If we reach the last character in the string, break to keep the current node's reference
 			if(i == (key.length() - 1)) break;
 
 			// Move to next node
-			current = current.hash.table[index].node;
+			current = current.hash.getTable()[index].getNode();
 		}
 
 		// Look for end of word and mark it with isWord = true and assign element.word field
 		finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
-		if (finalIndex != -1 && current.hash.table[finalIndex] != null) {
-			current.hash.table[finalIndex].isWord = true;
-			current.hash.table[finalIndex].word = key;
+		if (finalIndex != -1 && current.hash.getTable()[finalIndex] != null) {
+			current.hash.getTable()[finalIndex].setWord(true);
+			current.hash.getTable()[finalIndex].setWord(key);
 		}
 	}
 	
@@ -56,7 +62,7 @@ public class TrieNode {
 			}
 
 			// Check if node at index is null => create one if yes
-			if (current.hash.table[index].node == null) {
+			if (current.hash.getTable()[index].getNode() == null) {
 				return false;
 			}
 
@@ -67,11 +73,11 @@ public class TrieNode {
 			}
 
 			// Move to next node
-			current = current.hash.table[index].node;
+			current = current.hash.getTable()[index].getNode();
 		}
 
-		return finalIndex != -1 && current.hash.table[finalIndex] != null 
-				&& current.hash.table[finalIndex].isWord && current.hash.table[finalIndex].word.equals(key);
+		return finalIndex != -1 && current.hash.getTable()[finalIndex] != null 
+				&& current.hash.getTable()[finalIndex].isWord() && current.hash.getTable()[finalIndex].getWord().equals(key);
 	}
 
 	public boolean search(String key, boolean flag) {
@@ -88,7 +94,7 @@ public class TrieNode {
 			}
 
 			// Word doesn't exist
-			if (current.hash.table[index].node == null) {
+			if (current.hash.getTable()[index].getNode() == null) {
 				return false;
 			}
 
@@ -96,12 +102,12 @@ public class TrieNode {
 			if(j == key.length() - 1) break;
 
 			// Move to next node
-			current = current.hash.table[index].node;
+			current = current.hash.getTable()[index].getNode();
 		}
 
 		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
-		return finalIndex != -1 && current.hash.table[finalIndex] != null 
-				&& current.hash.table[finalIndex].isWord;
+		return finalIndex != -1 && current.hash.getTable()[finalIndex] != null 
+				&& current.hash.getTable()[finalIndex].isWord();
 	}
 
 	public void searchImportance(String key) {
@@ -113,7 +119,7 @@ public class TrieNode {
 
 			// Get 'c's index
 			int index = current.hash.getIndex(c);
-			if(index == -1 || current.hash.table[index].node == null){ // character not found => word doesnt exist
+			if(index == -1 || current.hash.getTable()[index].getNode() == null){ // character not found => word doesnt exist
 				return;
 			}
 
@@ -121,80 +127,18 @@ public class TrieNode {
 			if(i == key.length() - 1) break;
 
 			// Move to next node
-			current = current.hash.table[index].node;
+			current = current.hash.getTable()[index].getNode();
 		}
 
 		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
-		if (finalIndex != -1 && current.hash.table[finalIndex] != null && current.hash.table[finalIndex].isWord) {
-			increaseImportance(current.hash.table[finalIndex]);
+		if (finalIndex != -1 && current.hash.getTable()[finalIndex] != null && current.hash.getTable()[finalIndex].isWord()) {
+			increaseImportance(current.hash.getTable()[finalIndex]);
 		}
 
 	}
 
 	private void increaseImportance(Element element) {
-		element.importance++;
+		element.setImportance(element.getImportance() + 1);
 	}
 
-	// public void printTree() {
-    //     System.out.println("Words in the Trie:");
-    //     printWords(this, new StringBuilder(), "ROOT"); // Start with the root node
-    // }
-    
-    // // Helper method to recursively print words
-    // private void printWords(TrieNode node, StringBuilder prefix, String parent) {
-    //     if (node == null) return;
-    
-    //     // Print the hash table of the current node using printHash()
-    //     System.out.println("Parent: " + parent + ", Current TrieNode's Hash Table:");
-    //     node.hash.printHash();
-    
-    //     // If the current node represents the end of a word, print it
-    //     if (node.isWord) {
-    //         System.out.println("Word: " + prefix.toString() + " (Parent: " + parent + ")");
-    //     }
-    
-    //     // Recursively traverse each character in the hash table
-    //     for (int i = 0; i < node.hash.table.length; i++) {
-    //         Element entry = node.hash.table[i];
-    //         if (entry != null) {
-    //             char c = entry.key;
-    //             prefix.append(c); // Append the character to the prefix
-    //             printWords(entry.node, prefix, Character.toString(c)); // Recur with the current character as the parent
-    //             prefix.deleteCharAt(prefix.length() - 1); // Backtrack
-    //         }
-    //     }
-    // }
-
-	// public void printTree() {
-	// 	System.out.println("Words in the Trie:");
-	// 	printWords(this, new StringBuilder());
-	// }
-	
-	// Helper method to recursively print words and their importance
-	// private void printWords(TrieNode node, StringBuilder prefix) {
-	// 	if (node == null) return;
-	
-	// 	// Iterate through each entry in the hash table
-	// 	for (int i = 0; i < node.hash.table.length; i++) {
-	// 		Element entry = node.hash.table[i];
-	// 		if (entry != null) {
-	// 			char c = entry.key;
-	// 			prefix.append(c); // Append the character to the prefix
-	
-	// 			// Check if this node marks the end of a word
-	// 			if (entry.node != null && entry.node.isWord) {
-	// 				System.out.println("Word: " + prefix.toString() + ", Importance: " + entry.node.importance);
-	// 			}
-	
-	// 			// Recur for the next node
-	// 			if (entry.node != null) {
-	// 				printWords(entry.node, prefix);
-	// 			}
-	
-	// 			prefix.deleteCharAt(prefix.length() - 1); // Backtrack
-	// 		}
-	// 	}
-	// }
-	
-	
 }

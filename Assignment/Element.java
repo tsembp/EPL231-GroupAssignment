@@ -1,38 +1,71 @@
 public class Element {
 
-    char key;
-    int probeLength;
-    TrieNode node;
-    int importance;
-    boolean isWord;
-    String word;
-    
-    public Element(char key, int probeLength){
+    private char key;
+    private int probeLength;
+    private TrieNode node;
+    private int importance;
+    private boolean isWord;
+    private String word;
+
+    // Constructor
+    public Element(char key, int probeLength) {
         this.key = key;
         this.probeLength = probeLength;
         this.importance = 0;
         this.isWord = false;
-        word = "";
+        this.word = "";
     }
 
-    public String getWord(){
-        return this. word;
+    // Getters and Setters
+    public char getKey() {
+        return key;
     }
 
-    public int getProbeLength(){
-        return this.probeLength;
+    public void setKey(char key) {
+        this.key = key;
     }
 
-    public char getKey(){
-        return this.key;
+    public int getProbeLength() {
+        return probeLength;
     }
 
-    public int getImportance(){
-        return this.importance;
+    public void setProbeLength(int probeLength) {
+        this.probeLength = probeLength;
     }
 
-    public void setProbeLength(int value){
-        this.probeLength = value;
+    public void incrementProbeLength(){
+        this.probeLength++;
     }
 
+    public TrieNode getNode() {
+        return node;
+    }
+
+    public void setNode(TrieNode node) {
+        this.node = node;
+    }
+
+    public int getImportance() {
+        return importance;
+    }
+
+    public void setImportance(int importance) {
+        this.importance = importance;
+    }
+
+    public boolean isWord() {
+        return isWord;
+    }
+
+    public void setWord(boolean isWord) {
+        this.isWord = isWord;
+    }
+
+    public String getWord() {
+        return word;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+    }
 }

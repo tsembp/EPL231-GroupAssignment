@@ -138,9 +138,9 @@ public class Main {
         // Go to node that searchWord ends at
         TrieNode current = dictionaryTree;
         for(char c : searchWord.toCharArray()){
-            int index = current.hash.getIndex(c);
+            int index = current.getHashTable().getIndex(c);
 
-            current = current.hash.table[index].node;
+            current = current.getHashTable().getTable()[index].getNode();
         }
         // Now current is pointing at the node in which the searchWord's last letter is at
 
@@ -173,13 +173,13 @@ public class Main {
     private static void findWordsCriteria1(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag){
         if(node == null) return;
 
-        for(Element element : node.hash.table) {
+        for(Element element : node.getHashTable().getTable()) {
             if(element != null) {
                 // Append element key at the word
-                currentWord.append(element.key);
+                currentWord.append(element.getKey());
 
                 // Check if isWord and add to storage data structure
-                if(element.isWord) {
+                if(element.isWord()) {
 
                     if(heap.isFull()) {
                         // We know that the currentWord is indeed a prefix of searchWord, so we just check their importance
@@ -195,8 +195,8 @@ public class Main {
                 }
 
                 // Recursively traverse downwards
-                if (element.node != null) {
-                    findWordsCriteria1(element.node, searchWord, currentWord, heap, criteriaFlag);
+                if (element.getNode() != null) {
+                    findWordsCriteria1(element.getNode(), searchWord, currentWord, heap, criteriaFlag);
                 }
 
                 // When recursion is complete, explore more paths from other elements in the hash table
@@ -216,11 +216,11 @@ public class Main {
         }
 
         // Continue recursively traversing the Trie for other possible words
-        for (Element element : node.hash.table) {
+        for (Element element : node.getHashTable().getTable()) {
             if (element != null) {
-                currentWord.append(element.key);  // Append current character to the word
+                currentWord.append(element.getKey());  // Append current character to the word
 
-                if(element.isWord) {
+                if(element.isWord()) {
                     if(currentWord.length() == searchWord.length()){
                         boolean criteria2Result = differentByTwoChars(currentWord.toString(), searchWord);
                         // If the two words differ by two AND element's importance is less => replace with heap's root
@@ -233,8 +233,8 @@ public class Main {
                     }
                 }
                 // Recursively traverse the Trie for the next level of nodes
-                if (element.node != null) {
-                    findWordsCriteria2(element.node, searchWord, currentWord, heap, criteriaFlag);
+                if (element.getNode() != null) {
+                    findWordsCriteria2(element.getNode(), searchWord, currentWord, heap, criteriaFlag);
                 }
     
                 // Backtrack by removing the last character
@@ -252,13 +252,13 @@ public class Main {
             return;
         }
 
-        for(Element element : node.hash.table) {
+        for(Element element : node.getHashTable().getTable()) {
             if(element != null) {
                 // Append element key at the word
-                currentWord.append(element.key);
+                currentWord.append(element.getKey());
 
                 // Check if isWord and add to storage data structure
-                if(element.isWord) {
+                if(element.isWord()) {
 
                     if(heap.isFull()) {
                         if(isValidWord(searchWord, currentWord.toString())) { // If current word is valid
@@ -276,8 +276,8 @@ public class Main {
                 }
 
                 // Recursively traverse downwards
-                if (element.node != null) {
-                    findWordsCriteria3(element.node, searchWord, currentWord, heap, criteriaFlag);
+                if (element.getNode() != null) {
+                    findWordsCriteria3(element.getNode(), searchWord, currentWord, heap, criteriaFlag);
                 }
 
                 // When recursion is complete, explore more paths from other elements in the hash table
@@ -297,13 +297,13 @@ public class Main {
             recursiveCalls1++;
         }
 
-        for(Element element : node.hash.table) {
+        for(Element element : node.getHashTable().getTable()) {
             if(element != null) {
                 // Append element key at the word
-                currentWord.append(element.key);
+                currentWord.append(element.getKey());
 
                 // Check if isWord and add to storage data structure
-                if(element.isWord) {
+                if(element.isWord()) {
 
                     if(heap.isFull()) {
                         // CRITERIA 1
@@ -350,8 +350,8 @@ public class Main {
                 }
 
                 // Recursively traverse downwards
-                if (element.node != null) {
-                    traverseTrie(element.node, searchWord, currentWord, heap, criteriaFlag);
+                if (element.getNode() != null) {
+                    traverseTrie(element.getNode(), searchWord, currentWord, heap, criteriaFlag);
                 }
 
                 // When recursion is complete, explore more paths from other elements in the hash table

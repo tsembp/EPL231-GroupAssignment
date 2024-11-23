@@ -1,9 +1,9 @@
 public class RobinHoodHashing {
 
-    Element table[];
-    int capacity;
-    int size;
-    int maxProbeLength;
+    private Element table[];
+    private int capacity;
+    private int size;
+    private int maxProbeLength;
     private boolean isRehashing = false; // Flag to prevent rehashing during rehash
 
     public RobinHoodHashing() {
@@ -11,6 +11,10 @@ public class RobinHoodHashing {
         this.capacity = 0;
         this.maxProbeLength = 0;
         this.table = new Element[size];
+    }
+
+    public Element[] getTable(){
+        return this.table;
     }
 
     public void insert(char key) {
@@ -25,18 +29,18 @@ public class RobinHoodHashing {
         int index = hashFunction(key);
 
         while (table[index] != null) {
-            if (newElement.probeLength > table[index].getProbeLength()) { // sSwitch elements
+            if (newElement.getProbeLength() > table[index].getProbeLength()) { // sSwitch elements
                 Element temp = table[index];
                 table[index] = newElement;
                 newElement = temp;
-                maxProbeLength = Math.max(maxProbeLength, table[index].probeLength);
+                maxProbeLength = Math.max(maxProbeLength, table[index].getProbeLength());
             }
 
-            newElement.probeLength++; // increment probeLength
+            newElement.setProbeLength(newElement.getProbeLength() + 1); // increment probeLength
             index = (index + 1) % size; // move to next
         }
 
-        maxProbeLength = Math.max(maxProbeLength, newElement.probeLength); // update maxProbeLength
+        maxProbeLength = Math.max(maxProbeLength, newElement.getProbeLength()); // update maxProbeLength
         table[index] = newElement; // insert new element
         capacity++; // increase capacity
     }
@@ -76,28 +80,28 @@ public class RobinHoodHashing {
 
     private void insertRehash(Element element) {
         Element newElement = new Element(element.getKey(), 0);
-        newElement.node = element.node; // Preserve the node reference
-        newElement.isWord = element.isWord;
-        newElement.importance = element.importance;
-        newElement.word = element.word;
+        newElement.setNode(element.getNode()); // Preserve the node reference
+        newElement.setWord(element.isWord());
+        newElement.setImportance(element.getImportance());
+        newElement.setWord(element.getWord());
         int index = hashFunction(newElement.getKey());
 
         while (table[index] != null) {
 
-            if (newElement.probeLength > table[index].getProbeLength()) { // Switch elements
+            if (newElement.getProbeLength() > table[index].getProbeLength()) { // Switch elements
                 Element temp = table[index];
                 table[index] = newElement;
                 newElement = temp;
-                maxProbeLength = Math.max(maxProbeLength, table[index].probeLength);
+                maxProbeLength = Math.max(maxProbeLength, table[index].getProbeLength());
             }
 
-            newElement.probeLength++; // increase probeLength
+            newElement.incrementProbeLength(); // increase probeLength
             index = (index + 1) % size; // move to next index
         }
 
         table[index] = newElement; // insert element
         capacity++; // icrease capacity
-        maxProbeLength = Math.max(maxProbeLength, newElement.probeLength); // update maxProbeLength
+        maxProbeLength = Math.max(maxProbeLength, newElement.getProbeLength()); // update maxProbeLength
     }
 
     public boolean search(char key) {
