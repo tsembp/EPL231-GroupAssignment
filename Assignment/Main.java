@@ -12,10 +12,9 @@ public class Main {
     static int recursiveCalls3 = 0;
 
     public static void main(String[] args) {
-
         /* CONSTRUCT DICTIONARY FILE */
         TrieNode tree = new TrieNode();
-        String dictionary = "./Dictionaries/Same Length/100000.txt"; // Replace with the path to your file
+        String dictionary = "./Dictionaries/Different Length/100000.txt"; // Replace with the path to your file
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
@@ -31,71 +30,140 @@ public class Main {
             e.printStackTrace();
         }
 
-        // Step 2: Read words from the file again and search them in the Trie
-        try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
-            String word;
-            while ((word = br.readLine()) != null) {
-                word = word.trim(); // Remove leading and trailing whitespace
-                word = word.toLowerCase();
-                if (!word.isEmpty()) {
-                    boolean found = tree.search(word);
-                    if(!found){
-                        System.out.println("Word not found: " + word);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        int[] counts = new int[4];
+        traverseTrie(tree, counts);
+
+        // Print the results
+        System.out.println("Nodes with hash table size 5: " + counts[0]);
+        System.out.println("Nodes with hash table size 11: " + counts[1]);
+        System.out.println("Nodes with hash table size 19: " + counts[2]);
+        System.out.println("Nodes with hash table size 29: " + counts[3]);
+
+        int sum = 0;
+        for(int value : counts){
+            sum += value;
         }
 
+        System.out.println("Sum of counts: " + sum);
+        
 
-        // /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
-        // String filename = "outputScript_with_spaces.txt"; // Replace with the path to your file
-        // String outputFile = "scriptEdited.txt";
-
-        // // Step 1: Read words from the file, clean them, and write to the output file
-        // try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            
-        //     String line;
-        //     while ((line = br.readLine()) != null) {
-        //         String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
-        //         for (String word : words) {
-        //             // Clean the word by removing unwanted punctuation
-        //             String cleanWord = word.replaceAll("[\"“”.,?}{-]", "");
-        //             if (!cleanWord.isEmpty()) {
-        //                 tree.searchImportance(cleanWord);
-        //             }
-        //         }
-        //     }
-            
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
-
-        // Scanner scanner = new Scanner(System.in);
-        // String word = "";
-        // int k = 0;
-
-        // while(true){
-        //     System.out.print("Enter a word (or 'exit' to end): ");
-        //     word = scanner.nextLine();
-
-        //     if(word.equals("exit")){
-        //         System.out.println("End of program.");
-        //         break;
-        //     }
-
-        //     System.out.println("Enter number of alternative words (k): ");
-        //     try {
-        //         k = Integer.parseInt(scanner.nextLine());
-        //         findRelevantWords(word, k, tree);
-        //     } catch (NumberFormatException e) {
-        //         System.out.println("Please insert a valid number.");
-        //     }
-        //     System.out.println(); 
-        // }
-        // scanner.close();
     }
+
+    // public static void main(String[] args) {
+
+    //     /* CONSTRUCT DICTIONARY FILE */
+    //     TrieNode tree = new TrieNode();
+    //     String dictionary = "./Dictionaries/Same Length/100000.txt"; // Replace with the path to your file
+
+    //     // Step 1: Read words from the file and insert them into the Trie
+    //     try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
+    //         String word;
+    //         while ((word = br.readLine()) != null) {
+    //             word = word.trim(); // Remove leading and trailing whitespace
+    //             word = word.toLowerCase();
+    //             if (!word.isEmpty()) {
+    //                 tree.insert(word);
+    //             }
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+
+    //     // Step 2: Read words from the file again and search them in the Trie
+    //     try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
+    //         String word;
+    //         while ((word = br.readLine()) != null) {
+    //             word = word.trim(); // Remove leading and trailing whitespace
+    //             word = word.toLowerCase();
+    //             if (!word.isEmpty()) {
+    //                 boolean found = tree.search(word);
+    //                 if(!found){
+    //                     System.out.println("Word not found: " + word);
+    //                 }
+    //             }
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+
+
+    //     // /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
+    //     // String filename = "outputScript_with_spaces.txt"; // Replace with the path to your file
+    //     // String outputFile = "scriptEdited.txt";
+
+    //     // // Step 1: Read words from the file, clean them, and write to the output file
+    //     // try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            
+    //     //     String line;
+    //     //     while ((line = br.readLine()) != null) {
+    //     //         String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
+    //     //         for (String word : words) {
+    //     //             // Clean the word by removing unwanted punctuation
+    //     //             String cleanWord = word.replaceAll("[\"“”.,?}{-]", "");
+    //     //             if (!cleanWord.isEmpty()) {
+    //     //                 tree.searchImportance(cleanWord);
+    //     //             }
+    //     //         }
+    //     //     }
+            
+    //     // } catch (IOException e) {
+    //     //     e.printStackTrace();
+    //     // }
+
+    //     // Scanner scanner = new Scanner(System.in);
+    //     // String word = "";
+    //     // int k = 0;
+
+    //     // while(true){
+    //     //     System.out.print("Enter a word (or 'exit' to end): ");
+    //     //     word = scanner.nextLine();
+
+    //     //     if(word.equals("exit")){
+    //     //         System.out.println("End of program.");
+    //     //         break;
+    //     //     }
+
+    //     //     System.out.println("Enter number of alternative words (k): ");
+    //     //     try {
+    //     //         k = Integer.parseInt(scanner.nextLine());
+    //     //         findRelevantWords(word, k, tree);
+    //     //     } catch (NumberFormatException e) {
+    //     //         System.out.println("Please insert a valid number.");
+    //     //     }
+    //     //     System.out.println(); 
+    //     // }
+    //     // scanner.close();
+    // }
+
+    // public static void main(String[] args) {
+    //     TrieNode root = new TrieNode();
+    
+    //     // Example: Insert some keys into the trie
+    //     root.insert("apple");
+    //     root.insert("app");
+    //     root.insert("bat");
+    //     root.insert("ball");
+    //     root.insert("cat");
+    //     root.insert("car");
+    //     root.insert("dog");
+    //     // root.insert("m");
+    //     // root.insert("n");
+    //     // for (char c = 'a'; c <= 'z'; c++) {
+    //     //     root.insert(c + "");
+    //     // }
+    
+    //     // Array to store counts for hash table sizes 5, 11, 19, and 29
+    //     int[] counts = new int[4];
+    
+    //     // Traverse the trie and count nodes
+    //     traverseTrie(root, counts);
+    
+    //     // Print the results
+    //     System.out.println("Nodes with hash table size 5: " + counts[0]);
+    //     System.out.println("Nodes with hash table size 11: " + counts[1]);
+    //     System.out.println("Nodes with hash table size 19: " + counts[2]);
+    //     System.out.println("Nodes with hash table size 29: " + counts[3]);
+    // }
 
     public static void findRelevantWords(String searchWord, int k, TrieNode dictionaryTree ){
         if(!dictionaryTree.search(searchWord)){
@@ -112,14 +180,14 @@ public class Main {
         // Now current is pointing at the node in which the searchWord's last letter is at
 
         // RobinHoodHashing hash = current.hash;
-        StringBuilder str1 = new StringBuilder(searchWord);
-        StringBuilder str2 = new StringBuilder();
-        MinHeap heap = new MinHeap(k);
+        // StringBuilder str1 = new StringBuilder(searchWord);
+        // StringBuilder str2 = new StringBuilder();
+        // MinHeap heap = new MinHeap(k);
 
-        traverseTrie(current, searchWord, str1, heap, 1); // Find words that adhere to criteria 1
-        traverseTrie(dictionaryTree, searchWord, str2, heap, 2); // Find words that adhere to criteria 2
-        traverseTrie(dictionaryTree, searchWord, str2, heap, 3); // Find words that adhere to criteria 3
-        heap.print();
+        // traverseTrie(current, searchWord, str1, heap, 1); // Find words that adhere to criteria 1
+        // traverseTrie(dictionaryTree, searchWord, str2, heap, 2); // Find words that adhere to criteria 2
+        // traverseTrie(dictionaryTree, searchWord, str2, heap, 3); // Find words that adhere to criteria 3
+        // heap.print();
 
         StringBuilder str3 = new StringBuilder(searchWord);
         StringBuilder str4 = new StringBuilder();
@@ -243,68 +311,25 @@ public class Main {
         }
     }
 
-    private static void traverseTrie(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag) {
-        if(node == null) return;
-
-        if(criteriaFlag == 3) {
-            recursiveCallsTraverse++;
+    private static void traverseTrie(TrieNode node, int[] counts) {
+        if (node == null) return;
+    
+        // Check the size of the hash table and update the corresponding count
+        int hashTableSize = node.getHashTable().getTable().length;
+        if (hashTableSize == 5) {
+            counts[0]++;
+        } else if (hashTableSize == 11) {
+            counts[1]++;
+        } else if (hashTableSize == 19) {
+            counts[2]++;
+        } else if (hashTableSize == 29) {
+            counts[3]++;
         }
-
-        for(Element element : node.getHashTable().getTable()) {
-            if(element != null) {
-                // Append element key at the word
-                currentWord.append(element.getKey());
-
-                // Check if isWord and add to storage data structure
-                if(element.isWord()) {
-                    if(heap.isFull()) {
-                        // CRITERIA 1
-                        if(criteriaFlag == 1){
-                            // We know that the currentWord is indeed a prefix of searchWord, so we just check their importance
-                            // If heap is full, replace root element with current element (if its importance is less)
-                            if(element.getImportance() > heap.getRootImportance()) {
-                                heap.remove();
-                                heap.insert(element);
-                            }
-                        }
-                        // CRITERIA 2
-                        else if (criteriaFlag == 2){
-                            // If heap is full, replace the root element with the current element (if criteria 2 applies)
-                            if(currentWord.length() == searchWord.length()){
-                                boolean criteria2Result = differentByTwoChars(currentWord.toString(), searchWord);
-                                // If the two words differ by two AND element's importance is less => replace with heap's root
-                                if(criteria2Result && element.getImportance() > heap.getRootImportance()){
-                                    if(!heap.search(element)) { // If the element doesn't exist in the heap already insert it
-                                        heap.remove();
-                                        heap.insert(element);
-                                    }
-                                }
-                            }
-                        }
-                        // CRITERIA 3
-                        else if(criteriaFlag == 3) {
-                            if(isValidWord(searchWord, currentWord.toString())) { // If current word is valid
-                                if(element.getImportance() > heap.getRootImportance()) {
-                                    if(!heap.search(element)) { // If the element doesn't exist in the heap already insert it
-                                        heap.remove();
-                                        heap.insert(element);
-                                    }
-                                }
-                            }
-                        } else {
-                            System.out.println("Wrong criteria flag value passed in traverseTrie().");
-                            return;
-                        }
-                    } else { heap.insert(element); }
-                }
-
-                // Recursively traverse downwards
-                if (element.getNode() != null) {
-                    traverseTrie(element.getNode(), searchWord, currentWord, heap, criteriaFlag);
-                }
-
-                // When recursion is complete, explore more paths from other elements in the hash table
-                currentWord.deleteCharAt(currentWord.length() - 1);
+    
+        // Recursively traverse the child nodes in the hash table
+        for (Element element : node.getHashTable().getTable()) {
+            if (element != null && element.getNode() != null) {
+                traverseTrie(element.getNode(), counts);
             }
         }
     }
