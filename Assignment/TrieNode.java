@@ -23,7 +23,6 @@ public class TrieNode {
 		if(key == null || key.equals("")) return;
 
 		TrieNode current = this;
-		int finalIndex = 0;
 
 		for(int i=0; i < key.length(); i++){
 			char c = key.charAt(i);
@@ -51,13 +50,6 @@ public class TrieNode {
 
 		// Set word length of word to key's length
 		current.wordLength = key.length();
-
-		// Look for end of word and mark it with isWord = true and assign element.word field
-		finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
-		if (finalIndex != -1 && current.hash.getTable()[finalIndex] != null) {
-			current.hash.getTable()[finalIndex].setWordLength(key.length());
-			// current.hash.getTable()[finalIndex].setWord(key);
-		}
 	}
 	
 	public boolean search(String key) {
@@ -178,6 +170,5 @@ public class TrieNode {
 	
 		return false; // Not found in this path
 	}
-	
 
 }

@@ -129,17 +129,6 @@ public class TrieNodeStatic {
 		return count;
 	}
 
-	// public static void main(String[] args) {
-	// 	TrieNodeStatic root = new TrieNodeStatic();
-	// 	insert(root, "apple");
-	// 	insert(root, "app");
-	// 	insert(root, "bat");
-	// 	insert(root, "ball");
-	
-	// 	int totalNodes = traverseTrie(root);
-	// 	System.out.println("Total number of nodes in the trie: " + totalNodes);
-	// }
-
 	public static void main(String[] args) {
 		/* CONSTRUCT DICTIONARY FILE */
         TrieNodeStatic tree = new TrieNodeStatic();
@@ -166,71 +155,6 @@ public class TrieNodeStatic {
         System.out.println("Number of nodes: " + count);
 	}
 	
-	// public static void main(String args[]) {
-	// 	/* CONSTRUCT DICTIONARY FILE */
-    //     TrieNodeStatic tree = new TrieNodeStatic();
-    //     String dictionary = "./Dictionaries/Same Length/100000.txt"; // Replace with the path to your file
-
-    //     // Step 1: Read words from the file and insert them into the Trie
-    //     try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
-    //         String word;
-    //         while ((word = br.readLine()) != null) {
-    //             word = word.trim(); // Remove leading and trailing whitespace
-    //             word = word.toLowerCase();
-    //             if (!word.isEmpty()) {
-    //                 insert(tree, word);
-    //             }
-    //         }
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-
-    //     // Step 2: Read words from the file again and search them in the Trie
-    //     try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
-    //         String word;
-    //         while ((word = br.readLine()) != null) {
-    //             word = word.trim(); // Remove leading and trailing whitespace
-    //             word = word.toLowerCase();
-    //             if (!word.isEmpty()) {
-    //                 boolean found = search(tree, word);
-	// 				if(!found){
-	// 					System.out.println("Word " + word + " not found.");
-	// 				}
-    //             }
-    //         }
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-
-	// 	// /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
-    //     // String filename = "outputScript_with_spaces.txt"; // Replace with the path to your file
-
-    //     // // Step 1: Read words from the file, clean them, and write to the output file
-    //     // try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            
-    //     //     String line;
-    //     //     while ((line = br.readLine()) != null) {
-    //     //         String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
-    //     //         for (String word : words) {
-    //     //             // Clean the word by removing unwanted punctuation
-    //     //             String cleanWord = word.replaceAll("[\"“”.,?}{-]", "");
-    //     //             if (!cleanWord.isEmpty()) {
-    //     //                 searchImportance(tree, cleanWord);
-    //     //             }
-    //     //         }
-    //     //     }
-            
-    //     // } catch (IOException e) {
-    //     //     e.printStackTrace();
-    //     // }
-
-	// 	//  // Print the importance of each word
-	// 	//  System.out.println("Words and their importance:");
-	// 	//  printImportance(tree, new StringBuilder());
-
-		
-	// }
-
 	public static void printImportance(TrieNodeStatic root, StringBuilder currentWord) {
 		// Base case: If the current node is a word, print it and its importance
 		if (root.isWord) {

@@ -46,8 +46,7 @@ public class RobinHoodHashing {
     }
 
     private void rehash() {
-        // Determine the new capacity based on a predefined sequence or doubling
-        // strategy
+        // Determine the new capacity based on a predefined sequence or doubling strategy
         int newSize;
         if (size == 5) {
             newSize = 11;
@@ -82,9 +81,7 @@ public class RobinHoodHashing {
         Element newElement = new Element(element.getKey(), 0);
         newElement.setNode(element.getNode()); // Preserve the node reference
         newElement.setImportance(element.getImportance());
-        
-        // newElement.setWord(element.isWord());
-        // newElement.setWord(element.getWord());
+
         int index = hashFunction(newElement.getKey());
 
         while (table[index] != null) {

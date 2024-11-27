@@ -119,6 +119,12 @@ public class MinHeap {
         return size == maxsize;
     }
 
+    public void printList(){
+        for (int i = 0; i < size; i++) {
+            System.out.println(strHeap[i] + " (" + importanceHeap[i] + ")");
+        }
+    }
+
     public void print() {
         for (int i = 0; i < size / 2; i++) {
             String parent = strHeap[i];
@@ -132,40 +138,5 @@ public class MinHeap {
             );
         }
     }
-
-
-    // public static void main(String[] args) {
-    //     // Create a MinHeap with a maximum size of 10
-    //     MinHeap minHeap = new MinHeap(3);
-
-    //     // Insert elements into the MinHeap
-    //     minHeap.insert("apple", 5);
-    //     minHeap.insert("banana", 3);
-    //     minHeap.insert("cherry", 8);
-    //     minHeap.insert("date", 2);
-    //     minHeap.insert("elderberry", 6);
-
-    //     // Print the MinHeap
-    //     System.out.println("Heap after insertions:");
-    //     minHeap.print();
-
-    //     // Remove the root element and print the heap
-    //     System.out.println("Removing the root element: " + minHeap.remove());
-    //     System.out.println("Heap after removing the root:");
-    //     minHeap.print();
-
-    //     // Check if a specific word exists in the heap
-    //     String searchWord1 = "banana";
-    //     System.out.println("Does the heap contain '" + searchWord1 + "'? " + minHeap.search(searchWord1));
-
-    //     String searchWord2 = "cherry";
-    //     System.out.println("Does the heap contain '" + searchWord2 + "'? " + minHeap.search(searchWord2));
-
-    //     // Insert more elements to test dynamic behavior
-    //     minHeap.insert("fig", 1);
-    //     System.out.println("Heap after inserting 'fig':");
-    //     minHeap.print();
-    // }
-
 
 }

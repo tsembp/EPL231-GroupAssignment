@@ -1,7 +1,5 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -11,46 +9,10 @@ public class Main {
     static int recursiveCalls2 = 0;
     static int recursiveCalls3 = 0;
 
-    // public static void main(String[] args) {
-    //     /* CONSTRUCT DICTIONARY FILE */
-    //     TrieNode tree = new TrieNode();
-    //     String dictionary = "./Dictionaries/Different Length/100000.txt"; // Replace with the path to your file
-
-    //     // Step 1: Read words from the file and insert them into the Trie
-    //     try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
-    //         String word;
-    //         while ((word = br.readLine()) != null) {
-    //             word = word.trim(); // Remove leading and trailing whitespace
-    //             word = word.toLowerCase();
-    //             if (!word.isEmpty()) {
-    //                 tree.insert(word);
-    //             }
-    //         }
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-
-    //     int[] counts = new int[4];
-    //     traverseTrie(tree, counts);
-
-    //     // Print the results
-    //     System.out.println("Nodes with hash table size 5: " + counts[0]);
-    //     System.out.println("Nodes with hash table size 11: " + counts[1]);
-    //     System.out.println("Nodes with hash table size 19: " + counts[2]);
-    //     System.out.println("Nodes with hash table size 29: " + counts[3]);
-
-    //     int sum = 0;
-    //     for(int value : counts){
-    //         sum += value;
-    //     }
-
-    //     System.out.println("Sum of counts: " + sum);
-    // }
-
     public static void main(String[] args) {
         /* CONSTRUCT DICTIONARY FILE */
         TrieNode tree = new TrieNode();
-        String dictionary = "altTestDict.txt"; // Replace with the path to your file
+        String dictionary = "testDictionary.txt"; // Replace with the path to your file
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
@@ -85,7 +47,7 @@ public class Main {
         }
 
         /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
-        String filename = "altTestImp.txt"; // Replace with the path to your file
+        String filename = "script.txt"; // Replace with the path to your file
         // String outputFile = "scriptEdited.txt";
 
         // Step 1: Read words from the file, clean them, and write to the output file
@@ -140,36 +102,6 @@ public class Main {
         scanner.close();
     }
 
-    // public static void main(String[] args) {
-    //     TrieNode root = new TrieNode();
-    
-    //     // Example: Insert some keys into the trie
-    //     root.insert("apple");
-    //     root.insert("app");
-    //     root.insert("bat");
-    //     root.insert("ball");
-    //     root.insert("cat");
-    //     root.insert("car");
-    //     root.insert("dog");
-    //     // root.insert("m");
-    //     // root.insert("n");
-    //     // for (char c = 'a'; c <= 'z'; c++) {
-    //     //     root.insert(c + "");
-    //     // }
-    
-    //     // Array to store counts for hash table sizes 5, 11, 19, and 29
-    //     int[] counts = new int[4];
-    
-    //     // Traverse the trie and count nodes
-    //     traverseTrie(root, counts);
-    
-    //     // Print the results
-    //     System.out.println("Nodes with hash table size 5: " + counts[0]);
-    //     System.out.println("Nodes with hash table size 11: " + counts[1]);
-    //     System.out.println("Nodes with hash table size 19: " + counts[2]);
-    //     System.out.println("Nodes with hash table size 29: " + counts[3]);
-    // }
-
     public static void findRelevantWords(String searchWord, int k, TrieNode dictionaryTree ){
         if(!dictionaryTree.search(searchWord)){
             System.out.println("Word " + searchWord + " not found (prefix method).");
@@ -184,16 +116,6 @@ public class Main {
         }
         // Now current is pointing at the node in which the searchWord's last letter is at
 
-        // RobinHoodHashing hash = current.hash;
-        // StringBuilder str1 = new StringBuilder(searchWord);
-        // StringBuilder str2 = new StringBuilder();
-        // MinHeap heap = new MinHeap(k);
-
-        // traverseTrie(current, searchWord, str1, heap, 1); // Find words that adhere to criteria 1
-        // traverseTrie(dictionaryTree, searchWord, str2, heap, 2); // Find words that adhere to criteria 2
-        // traverseTrie(dictionaryTree, searchWord, str2, heap, 3); // Find words that adhere to criteria 3
-        // heap.print();
-
         StringBuilder str3 = new StringBuilder(searchWord);
         StringBuilder str4 = new StringBuilder();
         MinHeap heap2 = new MinHeap(k);
@@ -202,9 +124,7 @@ public class Main {
         findWordsCriteria2(dictionaryTree, searchWord, str4, heap2, 2); // Find words that adhere to criteria 2
         findWordsCriteria3(dictionaryTree, searchWord, str4, heap2, 3); // Find words that adhere to criteria 3
 
-        System.out.println();
-
-        heap2.print();
+        heap2.printList();
 
         System.out.println("Recursvie calls in travserse: " + recursiveCallsTraverse);
         System.out.println("Recursive calls in criteria 2: " + recursiveCalls2);
@@ -223,16 +143,6 @@ public class Main {
                 if(node.getWordLength() != 0 && element.getImportance() != 0) {
                     // Insert in heap
                     heap.insert(currentWord.toString(), element.getImportance());
-
-
-                    // if(heap.isFull()) {
-                    //     // We know that the currentWord is indeed a prefix of searchWord, so we just check their importance
-                    //     // If heap is full, replace root element with current element (if its importance is less)
-                    //     if(element.getImportance() > heap.getRootImportance()) {
-                    //         heap.remove();
-                    //         heap.insert(element);
-                    //     }
-                    // } else { heap.insert(element); }
                 }
 
                 // Recursively traverse downwards
@@ -265,17 +175,6 @@ public class Main {
                         if(criteria2Result){
                             heap.insert(currentWord.toString(), element.getImportance());
                         }
-                        
-                        
-                        
-                        
-                        
-                        // if(criteria2Result && element.getImportance() > heap.getRootImportance()){
-                        //     if(!heap.search(element)) { // If the element doesn't exist in the heap already insert it
-                        //         heap.remove();
-                        //         heap.insert(element);
-                        //     }
-                        // }
                     }
                 }
                 // Recursively traverse the Trie for the next level of nodes
