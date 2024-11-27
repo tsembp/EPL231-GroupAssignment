@@ -1,6 +1,7 @@
 public class TrieNode {
 	
 	private RobinHoodHashing hash;
+	private int wordLength;
 
 	public TrieNode() {
 		hash = new RobinHoodHashing();
@@ -8,6 +9,14 @@ public class TrieNode {
 
 	public RobinHoodHashing getHashTable(){
 		return this.hash;
+	}
+
+	public int getWordLength(){
+		return this.wordLength;
+	}
+
+	public void setWordLength(int value){
+		this.wordLength = value;
 	}
 	
 	public void insert(String key) {
@@ -40,11 +49,14 @@ public class TrieNode {
 			current = current.hash.getTable()[index].getNode();
 		}
 
+		// Set word length of word to key's length
+		current.wordLength = key.length();
+
 		// Look for end of word and mark it with isWord = true and assign element.word field
 		finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
 		if (finalIndex != -1 && current.hash.getTable()[finalIndex] != null) {
-			current.hash.getTable()[finalIndex].setWord(true);
-			current.hash.getTable()[finalIndex].setWord(key);
+			current.hash.getTable()[finalIndex].setWordLength(key.length());
+			// current.hash.getTable()[finalIndex].setWord(key);
 		}
 	}
 	
@@ -77,7 +89,7 @@ public class TrieNode {
 		}
 
 		return finalIndex != -1 && current.hash.getTable()[finalIndex] != null 
-				&& current.hash.getTable()[finalIndex].isWord() && current.hash.getTable()[finalIndex].getWord().equals(key);
+				&& current.wordLength == key.length();
 	}
 
 	public boolean search(String key, boolean flag) {
@@ -107,7 +119,7 @@ public class TrieNode {
 
 		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
 		return finalIndex != -1 && current.hash.getTable()[finalIndex] != null 
-				&& current.hash.getTable()[finalIndex].isWord();
+				&& current.wordLength == key.length();
 	}
 
 	public void searchImportance(String key) {
@@ -131,7 +143,7 @@ public class TrieNode {
 		}
 
 		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
-		if (finalIndex != -1 && current.hash.getTable()[finalIndex] != null && current.hash.getTable()[finalIndex].isWord()) {
+		if (finalIndex != -1 && current.hash.getTable()[finalIndex] != null && current.wordLength == key.length()) {
 			increaseImportance(current.hash.getTable()[finalIndex]);
 		}
 
@@ -140,5 +152,32 @@ public class TrieNode {
 	private void increaseImportance(Element element) {
 		element.setImportance(element.getImportance() + 1);
 	}
+
+	public String reconstructWord(TrieNode root, TrieNode targetNode) {
+		StringBuilder word = new StringBuilder();
+		if (findWordDFS(root, targetNode, word)) {
+			return word.toString();
+		}
+		return null; // If the targetNode is not found in the trie
+	}
+	
+	private boolean findWordDFS(TrieNode currentNode, TrieNode targetNode, StringBuilder word) {
+		if (currentNode == targetNode) {
+			return true; // Found the target node
+		}
+	
+		for (Element element : currentNode.getHashTable().getTable()) {
+			if (element != null) {
+				word.append(element.getKey()); // Add the character to the word
+				if (findWordDFS(element.getNode(), targetNode, word)) {
+					return true; // If found in this path, return true
+				}
+				word.deleteCharAt(word.length() - 1); // Backtrack
+			}
+		}
+	
+		return false; // Not found in this path
+	}
+	
 
 }

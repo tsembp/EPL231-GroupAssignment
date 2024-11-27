@@ -11,49 +11,10 @@ public class Main {
     static int recursiveCalls2 = 0;
     static int recursiveCalls3 = 0;
 
-    public static void main(String[] args) {
-        /* CONSTRUCT DICTIONARY FILE */
-        TrieNode tree = new TrieNode();
-        String dictionary = "./Dictionaries/Different Length/100000.txt"; // Replace with the path to your file
-
-        // Step 1: Read words from the file and insert them into the Trie
-        try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
-            String word;
-            while ((word = br.readLine()) != null) {
-                word = word.trim(); // Remove leading and trailing whitespace
-                word = word.toLowerCase();
-                if (!word.isEmpty()) {
-                    tree.insert(word);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        int[] counts = new int[4];
-        traverseTrie(tree, counts);
-
-        // Print the results
-        System.out.println("Nodes with hash table size 5: " + counts[0]);
-        System.out.println("Nodes with hash table size 11: " + counts[1]);
-        System.out.println("Nodes with hash table size 19: " + counts[2]);
-        System.out.println("Nodes with hash table size 29: " + counts[3]);
-
-        int sum = 0;
-        for(int value : counts){
-            sum += value;
-        }
-
-        System.out.println("Sum of counts: " + sum);
-        
-
-    }
-
     // public static void main(String[] args) {
-
     //     /* CONSTRUCT DICTIONARY FILE */
     //     TrieNode tree = new TrieNode();
-    //     String dictionary = "./Dictionaries/Same Length/100000.txt"; // Replace with the path to your file
+    //     String dictionary = "./Dictionaries/Different Length/100000.txt"; // Replace with the path to your file
 
     //     // Step 1: Read words from the file and insert them into the Trie
     //     try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
@@ -69,71 +30,115 @@ public class Main {
     //         e.printStackTrace();
     //     }
 
-    //     // Step 2: Read words from the file again and search them in the Trie
-    //     try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
-    //         String word;
-    //         while ((word = br.readLine()) != null) {
-    //             word = word.trim(); // Remove leading and trailing whitespace
-    //             word = word.toLowerCase();
-    //             if (!word.isEmpty()) {
-    //                 boolean found = tree.search(word);
-    //                 if(!found){
-    //                     System.out.println("Word not found: " + word);
-    //                 }
-    //             }
-    //         }
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
+    //     int[] counts = new int[4];
+    //     traverseTrie(tree, counts);
+
+    //     // Print the results
+    //     System.out.println("Nodes with hash table size 5: " + counts[0]);
+    //     System.out.println("Nodes with hash table size 11: " + counts[1]);
+    //     System.out.println("Nodes with hash table size 19: " + counts[2]);
+    //     System.out.println("Nodes with hash table size 29: " + counts[3]);
+
+    //     int sum = 0;
+    //     for(int value : counts){
+    //         sum += value;
     //     }
 
-
-    //     // /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
-    //     // String filename = "outputScript_with_spaces.txt"; // Replace with the path to your file
-    //     // String outputFile = "scriptEdited.txt";
-
-    //     // // Step 1: Read words from the file, clean them, and write to the output file
-    //     // try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            
-    //     //     String line;
-    //     //     while ((line = br.readLine()) != null) {
-    //     //         String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
-    //     //         for (String word : words) {
-    //     //             // Clean the word by removing unwanted punctuation
-    //     //             String cleanWord = word.replaceAll("[\"“”.,?}{-]", "");
-    //     //             if (!cleanWord.isEmpty()) {
-    //     //                 tree.searchImportance(cleanWord);
-    //     //             }
-    //     //         }
-    //     //     }
-            
-    //     // } catch (IOException e) {
-    //     //     e.printStackTrace();
-    //     // }
-
-    //     // Scanner scanner = new Scanner(System.in);
-    //     // String word = "";
-    //     // int k = 0;
-
-    //     // while(true){
-    //     //     System.out.print("Enter a word (or 'exit' to end): ");
-    //     //     word = scanner.nextLine();
-
-    //     //     if(word.equals("exit")){
-    //     //         System.out.println("End of program.");
-    //     //         break;
-    //     //     }
-
-    //     //     System.out.println("Enter number of alternative words (k): ");
-    //     //     try {
-    //     //         k = Integer.parseInt(scanner.nextLine());
-    //     //         findRelevantWords(word, k, tree);
-    //     //     } catch (NumberFormatException e) {
-    //     //         System.out.println("Please insert a valid number.");
-    //     //     }
-    //     //     System.out.println(); 
-    //     // }
-    //     // scanner.close();
+    //     System.out.println("Sum of counts: " + sum);
     // }
+
+    public static void main(String[] args) {
+        /* CONSTRUCT DICTIONARY FILE */
+        TrieNode tree = new TrieNode();
+        String dictionary = "altTestDict.txt"; // Replace with the path to your file
+
+        // Step 1: Read words from the file and insert them into the Trie
+        try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
+            String word;
+            while ((word = br.readLine()) != null) {
+                word = word.trim(); // Remove leading and trailing whitespace
+                word = word.toLowerCase();
+                word = word.replaceAll("[\"“”.,?}{-]!", "");
+                if (!word.isEmpty() && !containsPunctuation(word)) {
+                    tree.insert(word);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Step 2: Read words from the file again and search them in the Trie
+        try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
+            String word;
+            while ((word = br.readLine()) != null) {
+                word = word.trim(); // Remove leading and trailing whitespace
+                word = word.toLowerCase();
+                if (!word.isEmpty()) {
+                    boolean found = tree.search(word);
+                    if(!found){
+                        System.out.println("Word not found: " + word);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
+        String filename = "altTestImp.txt"; // Replace with the path to your file
+        // String outputFile = "scriptEdited.txt";
+
+        // Step 1: Read words from the file, clean them, and write to the output file
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] words = line.trim().toLowerCase().split("\\s+"); // Split line into words
+                for (String word : words) {
+                    // Clean the word by removing unwanted punctuation
+                    word = word.toLowerCase();
+
+                    // If word contains punctuation marks in-between (excluding first and last char) move to next word
+                    if(containsPunctuation(word)) continue;
+
+                    // Remove all punctuations in the word
+                    word = word.replaceAll("[^a-zA-Z0-9]", "");
+                    
+                    // Search word's importance
+                    if (!word.isEmpty() && !containsPunctuation(word)) {
+                        tree.searchImportance(word);
+                    }
+                }
+            }
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        String word = "";
+        int k = 0;
+
+        while(true){
+            System.out.print("Enter a word (or 'exit' to end): ");
+            word = scanner.nextLine();
+
+            if(word.equals("exit")){
+                System.out.println("End of program.");
+                break;
+            }
+
+            System.out.println("Enter number of alternative words (k): ");
+            try {
+                k = Integer.parseInt(scanner.nextLine());
+                findRelevantWords(word, k, tree);
+            } catch (NumberFormatException e) {
+                System.out.println("Please insert a valid number.");
+            }
+            System.out.println(); 
+        }
+        scanner.close();
+    }
 
     // public static void main(String[] args) {
     //     TrieNode root = new TrieNode();
@@ -215,16 +220,19 @@ public class Main {
                 currentWord.append(element.getKey());
 
                 // Check if isWord and add to storage data structure
-                if(element.isWord()) {
+                if(node.getWordLength() != 0 && element.getImportance() != 0) {
+                    // Insert in heap
+                    heap.insert(currentWord.toString(), element.getImportance());
 
-                    if(heap.isFull()) {
-                        // We know that the currentWord is indeed a prefix of searchWord, so we just check their importance
-                        // If heap is full, replace root element with current element (if its importance is less)
-                        if(element.getImportance() > heap.getRootImportance()) {
-                            heap.remove();
-                            heap.insert(element);
-                        }
-                    } else { heap.insert(element); }
+
+                    // if(heap.isFull()) {
+                    //     // We know that the currentWord is indeed a prefix of searchWord, so we just check their importance
+                    //     // If heap is full, replace root element with current element (if its importance is less)
+                    //     if(element.getImportance() > heap.getRootImportance()) {
+                    //         heap.remove();
+                    //         heap.insert(element);
+                    //     }
+                    // } else { heap.insert(element); }
                 }
 
                 // Recursively traverse downwards
@@ -250,16 +258,24 @@ public class Main {
             if (element != null) {
                 currentWord.append(element.getKey());  // Append current character to the word
 
-                if(element.isWord()) {
+                if(node.getWordLength() != 0 && element.getImportance() != 0) {
                     if(currentWord.length() == searchWord.length()){
                         boolean criteria2Result = differentByTwoChars(currentWord.toString(), searchWord);
                         // If the two words differ by two AND element's importance is less => replace with heap's root
-                        if(criteria2Result && element.getImportance() > heap.getRootImportance()){
-                            if(!heap.search(element)) { // If the element doesn't exist in the heap already insert it
-                                heap.remove();
-                                heap.insert(element);
-                            }
+                        if(criteria2Result){
+                            heap.insert(currentWord.toString(), element.getImportance());
                         }
+                        
+                        
+                        
+                        
+                        
+                        // if(criteria2Result && element.getImportance() > heap.getRootImportance()){
+                        //     if(!heap.search(element)) { // If the element doesn't exist in the heap already insert it
+                        //         heap.remove();
+                        //         heap.insert(element);
+                        //     }
+                        // }
                     }
                 }
                 // Recursively traverse the Trie for the next level of nodes
@@ -286,18 +302,10 @@ public class Main {
                 currentWord.append(element.getKey());
 
                 // Check if isWord and add to storage data structure
-                if(element.isWord()) {
-
-                    if(heap.isFull()) {
-                        if(isValidWord(searchWord, currentWord.toString())) { // If current word is valid
-                            if(element.getImportance() > heap.getRootImportance()) {
-                                if(!heap.search(element)) { // If the element doesn't exist in the heap already insert it
-                                    heap.remove();
-                                    heap.insert(element);
-                                }
-                            }
-                        }
-                    } else { heap.insert(element); }
+                if(node.getWordLength() != 0 && element.getImportance() != 0) {
+                    if(isValidWord(searchWord, currentWord.toString())) { // If current word is valid
+                        heap.insert(currentWord.toString(), element.getImportance());
+                    }
                 }
 
                 // Recursively traverse downwards
@@ -383,6 +391,19 @@ public class Main {
             }
         }
         return i == inputLength;
+    }
+
+    private static boolean containsPunctuation(String word) {
+        if (word.length() <= 2) {
+            return false; // No inner characters to check for punctuation
+        }
+        for (int i = 1; i < word.length() - 1; i++) {
+            char c = word.charAt(i);
+            if (!Character.isLetterOrDigit(c)) { // Check for non-alphanumeric characters
+                return true;
+            }
+        }
+        return false;
     }
 
 }

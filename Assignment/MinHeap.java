@@ -1,6 +1,7 @@
 public class MinHeap {
 
-    private Element[] Heap;
+    private String[] strHeap; // Array to store strings (words)
+    private int[] importanceHeap; // Array to store integer importance values
     private int size;
     private int maxsize;
 
@@ -9,8 +10,8 @@ public class MinHeap {
     public MinHeap(int maxsize) {
         this.maxsize = maxsize;
         this.size = 0;
-
-        Heap = new Element[this.maxsize];
+        this.strHeap = new String[this.maxsize];
+        this.importanceHeap = new int[this.maxsize];
     }
 
     private int parent(int pos) {
@@ -25,98 +26,146 @@ public class MinHeap {
         return (2 * pos) + 2;
     }
 
-    public int getRootImportance(){
-        return Heap[FRONT].getImportance();
-    }
-
-    public boolean isFull(){
-        return size == maxsize;
-    }
-
-    // Helper method for minHeapify | Swaps elements
     private void swap(int fpos, int spos) {
-        Element tmp = Heap[fpos];
-        Heap[fpos] = Heap[spos];
-        Heap[spos] = tmp;
+        // Swap importance values
+        int tempImportance = importanceHeap[fpos];
+        importanceHeap[fpos] = importanceHeap[spos];
+        importanceHeap[spos] = tempImportance;
+
+        // Swap associated strings
+        String tempString = strHeap[fpos];
+        strHeap[fpos] = strHeap[spos];
+        strHeap[spos] = tempString;
     }
 
     private void minHeapify(int pos) {
-            int left = leftChild(pos);
-            int right = rightChild(pos);
-            int smallest = pos;
+        int left = leftChild(pos);
+        int right = rightChild(pos);
+        int smallest = pos;
 
-            if (left < size) {
-                if(Heap[left].getImportance() < Heap[smallest].getImportance()) 
-                    smallest = left;
-            }
-            if (right < size) {
-                if(Heap[right].getImportance() < Heap[smallest].getImportance()) {
-                    smallest = right;
-                }
-            }
+        if (left < size && importanceHeap[left] < importanceHeap[smallest]) {
+            smallest = left;
+        }
+        if (right < size && importanceHeap[right] < importanceHeap[smallest]) {
+            smallest = right;
+        }
 
-            if(Heap[parent(pos)].getImportance() > Heap[smallest].getImportance()) {
-                swap(pos, parent(pos));
-            }
-
-            if (smallest != pos) {
-                swap(pos, smallest);
-                minHeapify(smallest);
-            }
+        if (smallest != pos) {
+            swap(pos, smallest);
+            minHeapify(smallest);
+        }
     }
 
-    public void insert(Element element) {
-        if (size < maxsize) {
-            // Standard insertion if the heap is not full
-            Heap[size] = element;
+    public void insert(String word, int importance) {
+        if(search(word)) return;
+
+        if(isFull()){
+            if(importance > importanceHeap[FRONT]){
+                remove();
+                insert(word, importance);
+            }
+        } else{
+            // Insert the new element at the end of the heap
+            importanceHeap[size] = importance;
+            strHeap[size] = word;
             int current = size;
             size++;
     
-            while (Heap[current].getImportance() < Heap[parent(current)].getImportance()) {
+            // Percolate up
+            while (current > 0 && importanceHeap[current] < importanceHeap[parent(current)]) {
                 swap(current, parent(current));
                 current = parent(current);
             }
-        } 
+        }
     }
 
-    public Element remove() {
-        if (size == 0) { // Check for empty heap
+    public String remove() {
+        if (size == 0) {
             System.out.println("Heap is empty");
             return null;
         }
 
-        // Get element at Heap[FRONT] and replace it with the last
-        Element popped = Heap[FRONT];
-        Heap[FRONT] = Heap[size-1];
+        // Remove the root (minimum element)
+        String poppedWord = strHeap[FRONT];
+        importanceHeap[FRONT] = importanceHeap[size - 1];
+        strHeap[FRONT] = strHeap[size - 1];
         size--;
 
-        // Percolate down the last element which now is at the root
+        // Percolate down
         minHeapify(FRONT);
-        return popped;
+
+        return poppedWord;
     }
 
-    public boolean search(Element element) {
-        // Iterate over the heap array
+    public boolean search(String word) {
         for (int i = 0; i < size; i++) {
-            // Check if the current element matches the target key
-            if (Heap[i].getWord().equals(element.getWord())) {
-                return true; // Return the true if element already exists
+            if (strHeap[i].equals(word)) {
+                return true;
             }
         }
-        // If no element is found, return null
+        
         return false;
+    }
+
+    public int getRootImportance() {
+        if (size == 0) {
+            System.out.println("Heap is empty");
+            return -1;
+        }
+        return importanceHeap[FRONT];
+    }
+
+    public boolean isFull() {
+        return size == maxsize;
     }
 
     public void print() {
         for (int i = 0; i < size / 2; i++) {
-            String leftChild = ((2 * i) + 1 < size) ? Heap[(2 * i) + 1].getWord() + "" : "null";
-            String rightChild = ((2 * i) + 2 < size) ? Heap[(2 * i) + 2].getWord() + "" : "null";
+            String parent = strHeap[i];
+            String leftChild = (2 * i + 1 < size) ? strHeap[2 * i + 1] : "null";
+            String rightChild = (2 * i + 2 < size) ? strHeap[2 * i + 2] : "null";
+
             System.out.println(
-                "PARENT : " + Heap[i].getWord()
-                + " LEFT CHILD : " + leftChild
-                + " RIGHT CHILD : " + rightChild
+                "PARENT: " + parent + " (" + importanceHeap[i] + ")" +
+                " LEFT CHILD: " + leftChild + " (" + (2 * i + 1 < size ? importanceHeap[2 * i + 1] : "null") + ")" +
+                " RIGHT CHILD: " + rightChild + " (" + (2 * i + 2 < size ? importanceHeap[2 * i + 2] : "null") + ")"
             );
         }
     }
+
+
+    // public static void main(String[] args) {
+    //     // Create a MinHeap with a maximum size of 10
+    //     MinHeap minHeap = new MinHeap(3);
+
+    //     // Insert elements into the MinHeap
+    //     minHeap.insert("apple", 5);
+    //     minHeap.insert("banana", 3);
+    //     minHeap.insert("cherry", 8);
+    //     minHeap.insert("date", 2);
+    //     minHeap.insert("elderberry", 6);
+
+    //     // Print the MinHeap
+    //     System.out.println("Heap after insertions:");
+    //     minHeap.print();
+
+    //     // Remove the root element and print the heap
+    //     System.out.println("Removing the root element: " + minHeap.remove());
+    //     System.out.println("Heap after removing the root:");
+    //     minHeap.print();
+
+    //     // Check if a specific word exists in the heap
+    //     String searchWord1 = "banana";
+    //     System.out.println("Does the heap contain '" + searchWord1 + "'? " + minHeap.search(searchWord1));
+
+    //     String searchWord2 = "cherry";
+    //     System.out.println("Does the heap contain '" + searchWord2 + "'? " + minHeap.search(searchWord2));
+
+    //     // Insert more elements to test dynamic behavior
+    //     minHeap.insert("fig", 1);
+    //     System.out.println("Heap after inserting 'fig':");
+    //     minHeap.print();
+    // }
+
 
 }
