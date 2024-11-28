@@ -153,7 +153,7 @@ public class TrieNodeStatic {
 	public static void main(String[] args) {
 		/* CONSTRUCT DICTIONARY FILE */
         TrieNodeStatic tree = new TrieNodeStatic();
-        String dictionary = "./Dictionaries/Different Length/1000.txt";
+        String dictionary = "./Dictionaries/Different Length/10000.txt";
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
