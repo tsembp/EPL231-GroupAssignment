@@ -1,4 +1,3 @@
-import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ public class FixedLengthWordGenerator {
     public static void main(String[] args) {
         int wordCount = 100; // Default number of words to generate
         int wordLength = 5; // Default word length
-        String outputFileName = "./Dictionaries/Same Length/1000.txt";
+        String outputFileName = "./Dictionaries/Same Length/75000.txt";
 
         // Read user input for word count and word length
         try {

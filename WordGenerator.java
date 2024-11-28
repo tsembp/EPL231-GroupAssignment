@@ -16,7 +16,7 @@ public class WordGenerator {
 
     public static void main(String[] args) {
         int wordCount = 100; // Default number of words to generate
-        String outputFileName = "./Dictionaries/Different Length/100000.txt";
+        String outputFileName = "./Dictionaries/Different Length/75000.txt";
 
         // Read user input for word count
         try {
