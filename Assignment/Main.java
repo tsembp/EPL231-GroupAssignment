@@ -46,6 +46,14 @@ public class Main {
             e.printStackTrace();
         }
 
+        /* CALCULATE NUMBER OF NODES WITH 5, 11, 19 and 29 SIZE HASH TABLE */
+        int[] counts = new int[4];
+        traverseTrie(tree, counts);
+        System.out.println("Nodes with hash table size 5: " + counts[0]);
+        System.out.println("Nodes with hash table size 11: " + counts[1]);
+        System.out.println("Nodes with hash table size 19: " + counts[2]);
+        System.out.println("Nodes with hash table size 29: " + counts[3]);
+
         /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
         String filename = "script.txt"; // Replace with the path to your file
         // String outputFile = "scriptEdited.txt";

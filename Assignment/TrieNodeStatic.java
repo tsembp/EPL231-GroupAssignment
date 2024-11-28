@@ -129,10 +129,31 @@ public class TrieNodeStatic {
 		return count;
 	}
 
+	public static void printImportance(TrieNodeStatic root, StringBuilder currentWord) {
+		// Base case: If the current node is a word, print it and its importance
+		if (root.isWord) {
+			System.out.println("Word: " + currentWord + ", Importance: " + root.importance);
+		}
+	
+		// Traverse each child node
+		for (int i = 0; i < ALPHABET_SIZE; i++) {
+			if (root.children[i] != null) {
+				// Append the character corresponding to this child
+				currentWord.append((char) (i + 'a'));
+	
+				// Recursive call for the child node
+				printImportance(root.children[i], currentWord);
+	
+				// Backtrack: Remove the last character after returning from recursion
+				currentWord.deleteCharAt(currentWord.length() - 1);
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 		/* CONSTRUCT DICTIONARY FILE */
         TrieNodeStatic tree = new TrieNodeStatic();
-        String dictionary = "./Dictionaries/Different Length/100000.txt"; // Replace with the path to your file
+        String dictionary = "./Dictionaries/Different Length/1000.txt";
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
@@ -153,27 +174,6 @@ public class TrieNodeStatic {
 
         // Print the results
         System.out.println("Number of nodes: " + count);
-	}
-	
-	public static void printImportance(TrieNodeStatic root, StringBuilder currentWord) {
-		// Base case: If the current node is a word, print it and its importance
-		if (root.isWord) {
-			System.out.println("Word: " + currentWord + ", Importance: " + root.importance);
-		}
-	
-		// Traverse each child node
-		for (int i = 0; i < ALPHABET_SIZE; i++) {
-			if (root.children[i] != null) {
-				// Append the character corresponding to this child
-				currentWord.append((char) (i + 'a'));
-	
-				// Recursive call for the child node
-				printImportance(root.children[i], currentWord);
-	
-				// Backtrack: Remove the last character after returning from recursion
-				currentWord.deleteCharAt(currentWord.length() - 1);
-			}
-		}
 	}
 	
 }
