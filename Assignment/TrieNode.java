@@ -23,6 +23,7 @@ public class TrieNode {
 		if(key == null || key.equals("")) return;
 
 		TrieNode current = this;
+		int finalIndex = 0;
 
 		for(int i=0; i < key.length(); i++){
 			char c = key.charAt(i);
@@ -42,14 +43,18 @@ public class TrieNode {
 			}
 			
 			// If we reach the last character in the string, break to keep the current node's reference
-			if(i == (key.length() - 1)) break;
+			if(i == (key.length() - 1)) {
+				finalIndex = index;
+				break;	
+			} 
 
 			// Move to next node
 			current = current.hash.getTable()[index].getNode();
 		}
 
 		// Set word length of word to key's length
-		current.wordLength = key.length();
+		// current.wordLength = key.length();
+		current.hash.getTable()[finalIndex].setIsWord(true);
 	}
 	
 	public boolean search(String key) {
@@ -81,7 +86,7 @@ public class TrieNode {
 		}
 
 		return finalIndex != -1 && current.hash.getTable()[finalIndex] != null 
-				&& current.wordLength == key.length();
+				&& current.hash.getTable()[finalIndex].getIsWord();
 	}
 
 	public boolean search(String key, boolean flag) {
@@ -111,7 +116,7 @@ public class TrieNode {
 
 		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
 		return finalIndex != -1 && current.hash.getTable()[finalIndex] != null 
-				&& current.wordLength == key.length();
+				&& current.hash.getTable()[finalIndex].getIsWord();
 	}
 
 	public void searchImportance(String key) {
@@ -135,7 +140,7 @@ public class TrieNode {
 		}
 
 		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
-		if (finalIndex != -1 && current.hash.getTable()[finalIndex] != null && current.wordLength == key.length()) {
+		if (finalIndex != -1 && current.hash.getTable()[finalIndex] != null && current.wordLength == key.length() && current.hash.getTable()[finalIndex].getIsWord()) {
 			increaseImportance(current.hash.getTable()[finalIndex]);
 		}
 

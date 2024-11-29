@@ -4,6 +4,7 @@ public class Element {
     private int probeLength;
     private TrieNode node;
     private int importance;
+    private boolean isWord;
 
     // Constructor
     public Element(char key, int probeLength) {
@@ -48,5 +49,9 @@ public class Element {
     public void setImportance(int importance) {
         this.importance = importance;
     }
+
+    public boolean getIsWord() { return this.isWord; }
+
+    public void setIsWord(boolean flag) { this.isWord = flag; }
 
 }
