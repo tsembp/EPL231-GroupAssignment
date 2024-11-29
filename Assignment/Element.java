@@ -1,10 +1,11 @@
 public class Element {
 
-    private char key;
-    private int probeLength;
-    private TrieNode node;
-    private int importance;
-    private boolean isWord;
+    private char key;           // 2 bytes
+    private int probeLength;    // 4 bytes
+    private TrieNode node;      // 4 bytes (reference)
+    private int importance;     // 4 bytes
+    private boolean isWord;     // 1 byte
+                                // TOTAL: 15 bytes
 
     // Constructor
     public Element(char key, int probeLength) {

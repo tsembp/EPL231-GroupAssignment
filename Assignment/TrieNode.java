@@ -1,7 +1,8 @@
 public class TrieNode {
 	
-	private RobinHoodHashing hash;
-	private int wordLength;
+	private RobinHoodHashing hash;		// sizeOf(RobinHoodHash) * 4 bytes (reference)
+	private int wordLength;				// 4 bytes
+										// TOTAL: 4 bytes + sizeOf(RobinHoodHash)
 
 	public TrieNode() {
 		hash = new RobinHoodHashing();
@@ -85,36 +86,6 @@ public class TrieNode {
 			current = current.hash.getTable()[index].getNode();
 		}
 
-		return finalIndex != -1 && current.hash.getTable()[finalIndex] != null 
-				&& current.hash.getTable()[finalIndex].getIsWord();
-	}
-
-	public boolean search(String key, boolean flag) {
-		TrieNode current = this;
-		for(int j = 0; j < key.length(); j++){
-			// Get character at index j
-			char c = key.charAt(j);
-
-			// Get character's index
-			int index = current.hash.getIndex(c);
-
-			if(index == -1){ // not found
-				return false;
-			}
-
-			// Word doesn't exist
-			if (current.hash.getTable()[index].getNode() == null) {
-				return false;
-			}
-
-			// If we reach the last character in the string, break to keep the current node's reference
-			if(j == key.length() - 1) break;
-
-			// Move to next node
-			current = current.hash.getTable()[index].getNode();
-		}
-
-		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
 		return finalIndex != -1 && current.hash.getTable()[finalIndex] != null 
 				&& current.hash.getTable()[finalIndex].getIsWord();
 	}

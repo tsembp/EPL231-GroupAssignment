@@ -1,10 +1,11 @@
 public class RobinHoodHashing {
 
-    private Element table[];
-    private int capacity;
-    private int size;
-    private int maxProbeLength;
-    private boolean isRehashing = false; // Flag to prevent rehashing during rehash
+    private Element table[];                // table.size * 4 bytes (reference)
+    private int capacity;                   // 4 bytes
+    private int size;                       // 4 bytes
+    private int maxProbeLength;             // 4 bytes
+    private boolean isRehashing = false;    // 1 byte
+                                            // TOTAL: 13 bytes + (size * 4 bytes)
 
     public RobinHoodHashing() {
         this.size = 5;
@@ -146,4 +147,5 @@ public class RobinHoodHashing {
 
         System.out.println("]");
     }
+
 }

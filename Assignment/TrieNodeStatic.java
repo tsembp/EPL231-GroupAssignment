@@ -6,10 +6,11 @@ public class TrieNodeStatic {
 	
 	private static int ALPHABET_SIZE = 26;
 	
-	private TrieNodeStatic[] children;
-	private int importance;
-	private boolean isWord;
-	private int wordLength;
+	private TrieNodeStatic[] children;		// 26 * 4 bytes (reference)
+	private int importance;					// 4 bytes
+	private boolean isWord;					// 1 byte
+	private int wordLength;					// 4 bytes
+											// TOTAL: 113 bytes
 
 	public TrieNodeStatic() {
 		children = new TrieNodeStatic[ALPHABET_SIZE];
@@ -65,30 +66,6 @@ public class TrieNodeStatic {
     			&& current.children[key.charAt(key.length() - 1) - 'a'].isWord;
 	}
 	
-	public static void searchImportance(TrieNodeStatic root, String key) {
-		TrieNodeStatic current = root;
-		
-		for(int i = 0; i < key.length(); i++) {
-			int index = key.charAt(i) - 'a';
-			
-			// key word doesn't exist
-			if(current.children[index] == null) return;
-			
-			// last iteration -> break to keep reference to last node
-			if(i == key.length() - 1){
-				break;
-			}
-
-			// move to next (downwards)
-			current = current.children[index];
-		}
-		
-		int lastIndex = key.charAt(key.length() - 1) - 'a';
-		if(current.children[lastIndex] != null && current.children[lastIndex].isWord){
-			current.children[lastIndex].importance++;
-		}
-	}
-
 	public int getWordLength(){
 		return this.wordLength;
 	}
@@ -129,31 +106,15 @@ public class TrieNodeStatic {
 		return count;
 	}
 
-	public static void printImportance(TrieNodeStatic root, StringBuilder currentWord) {
-		// Base case: If the current node is a word, print it and its importance
-		if (root.isWord) {
-			System.out.println("Word: " + currentWord + ", Importance: " + root.importance);
-		}
-	
-		// Traverse each child node
-		for (int i = 0; i < ALPHABET_SIZE; i++) {
-			if (root.children[i] != null) {
-				// Append the character corresponding to this child
-				currentWord.append((char) (i + 'a'));
-	
-				// Recursive call for the child node
-				printImportance(root.children[i], currentWord);
-	
-				// Backtrack: Remove the last character after returning from recursion
-				currentWord.deleteCharAt(currentWord.length() - 1);
-			}
-		}
+	public static int calculateMemory(TrieNodeStatic root){
+		// traverseTrie(root) returns the number of nodes in the Trie tree
+		return 113 * traverseTrie(root); // sizeOf(TrieNodeStatic) = 113 bytes
 	}
 
 	public static void main(String[] args) {
 		/* CONSTRUCT DICTIONARY FILE */
         TrieNodeStatic tree = new TrieNodeStatic();
-        String dictionary = "./Dictionaries/Different Length/75000.txt";
+        String dictionary = "./Dictionaries/Different Length/1000.txt";
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
@@ -174,7 +135,7 @@ public class TrieNodeStatic {
 
         // Print the results
         System.out.println("Number of nodes: " + count);
-		System.out.println("Total cells: " + count * 26);
+		System.out.println("Total memory: " + calculateMemory(tree));
 	}
 	
 }
