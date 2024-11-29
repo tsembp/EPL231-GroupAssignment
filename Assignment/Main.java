@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         /* CONSTRUCT DICTIONARY FILE */
         TrieNode tree = new TrieNode();
-        String dictionary = "./Dictionaries/Different Length/1000.txt"; // Replace with the path to your file
+        String dictionary = "planDict.txt"; // Replace with the path to your file
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
@@ -46,7 +46,7 @@ public class Main {
         System.out.println("Total Mem: " + calculateMemory(tree));
 
         /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
-        String filename = "script.txt"; // Replace with the path to your file
+        String filename = "planScript.txt"; // Replace with the path to your file
 
         // Step 1: Read words from the file, clean them, and write to the output file
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
@@ -74,6 +74,7 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
         Scanner scanner = new Scanner(System.in);
         String word = "";

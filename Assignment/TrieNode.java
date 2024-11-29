@@ -38,9 +38,7 @@ public class TrieNode {
 
 			// Check if node of element at index is null => create one if yes
 			if (current.hash.getTable()[index].getNode() == null) {
-				// current.hash.table[index].node = new TrieNode();
 				current.hash.getTable()[index].setNode(new TrieNode());
-
 			}
 			
 			// If we reach the last character in the string, break to keep the current node's reference
@@ -54,7 +52,7 @@ public class TrieNode {
 		}
 
 		// Set word length of word to key's length
-		// current.wordLength = key.length();
+		current.wordLength = key.length();
 		current.hash.getTable()[finalIndex].setIsWord(true);
 	}
 	
@@ -104,11 +102,14 @@ public class TrieNode {
 			}
 
 			// If we reach the last character in the string, break to keep the current node's reference
-			if(i == key.length() - 1) break;
+			if(i == key.length() - 1) {
+				break;
+			}
 
 			// Move to next node
 			current = current.hash.getTable()[index].getNode();
 		}
+
 
 		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
 		if (finalIndex != -1 && current.hash.getTable()[finalIndex] != null && current.wordLength == key.length() && current.hash.getTable()[finalIndex].getIsWord()) {
