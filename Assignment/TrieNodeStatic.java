@@ -8,13 +8,11 @@ public class TrieNodeStatic {
 	
 	private TrieNodeStatic[] children;		// 26 * 4 bytes (reference)
 	private int importance;					// 4 bytes
-	private boolean isWord;					// 1 byte
 	private int wordLength;					// 4 bytes
-											// TOTAL: 113 bytes
+											// TOTAL: 112 bytes
 
 	public TrieNodeStatic() {
 		children = new TrieNodeStatic[ALPHABET_SIZE];
-		isWord = false;
 		importance = -1;
 		wordLength = -1;
 	}
@@ -28,22 +26,11 @@ public class TrieNodeStatic {
 			if(current.children[index] == null) {
 				current.children[index] = new TrieNodeStatic();
 			}
-
-			// last iteration -> break to keep reference to last node
-			if(i == key.length() - 1){
-				break;
-			}
-
 			current = current.children[index];
 			
 		}
 
-		// get index of last character of word key
-		int lastIndex = key.charAt(key.length() - 1) - 'a';
-
-		// set as word
-		current.children[lastIndex].isWord = true;
-		current.children[lastIndex].setWordLength(key.length());
+		current.wordLength = key.length();
 	}
 	
 	public static boolean search(TrieNodeStatic root, String key) {
@@ -54,16 +41,10 @@ public class TrieNodeStatic {
 			
 			if(current.children[index] == null) return false;
 			
-			// last iteration -> break to keep reference to last node
-			if(i == key.length() - 1){
-				break;
-			}
-
 			current = current.children[index];
 		}
 		
-		return current.children[key.charAt(key.length() - 1) - 'a'] != null 
-    			&& current.children[key.charAt(key.length() - 1) - 'a'].isWord;
+		return current != null && key.length() == current.wordLength;
 	}
 	
 	public int getWordLength(){
@@ -76,14 +57,6 @@ public class TrieNodeStatic {
 
 	public void incrementImportance(){
 		this.importance++;
-	}
-
-	public boolean getIsWord(){
-		return isWord;
-	}
-
-	public void setIsWord(boolean exp){
-		this.isWord = exp;
 	}
 
 	public void setWordLength(int value){
@@ -112,9 +85,9 @@ public class TrieNodeStatic {
 	}
 
 	public static void main(String[] args) {
-		/* CONSTRUCT DICTIONARY FILE */
+        /* CONSTRUCT DICTIONARY FILE */
         TrieNodeStatic tree = new TrieNodeStatic();
-        String dictionary = "./Dictionaries/Different Length/1000.txt";
+        String dictionary = "./Dictionaries/Same Length/Length 5/Test 1/5000.txt";
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
@@ -128,15 +101,34 @@ public class TrieNodeStatic {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            return; // Exit the program if there's an issue with the file
         }
 
-		int count = 0;
-        count = traverseTrie(tree);
+        int count = traverseTrie(tree);
+
+        // Step 2: Reopen the file and check if every word exists in the Trie
+        int missingWords = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
+            String word;
+            while ((word = br.readLine()) != null) {
+                word = word.trim(); // Remove leading and trailing whitespace
+                word = word.toLowerCase();
+                if (!word.isEmpty()) {
+                    if (!search(tree, word)) {
+                        System.out.println("Word not found in Trie: " + word);
+                        missingWords++;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Print the results
         System.out.println("Number of nodes: " + count);
-		System.out.println("Total memory: " + calculateMemory(tree));
-	}
+        System.out.println("Total memory: " + calculateMemory(tree));
+        System.out.println("Number of missing words: " + missingWords);
+    }
 
 	public TrieNodeStatic[] getChildren() { return this.children; }
 	

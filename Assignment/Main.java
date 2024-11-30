@@ -48,7 +48,7 @@ public class Main {
     public static void main(String[] args) {
         /* CONSTRUCT DICTIONARY FILE */
         TrieNode tree = new TrieNode();
-        String dictionary = "./Dictionaries/Same Length/Length 5/Test 1/100000.txt"; // Replace with the path to your file
+        String dictionary = "./Dictionaries/Different Length/planDict.txt"; // Replace with the path to your file
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {

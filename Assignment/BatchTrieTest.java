@@ -5,7 +5,7 @@ public class BatchTrieTest {
 
     public static void main(String[] args) {
         String basePath = "./Dictionaries/Same Length/"; // Update this to the correct path
-        String outputFile = "memory_report.txt";
+        String outputFile = "memory_reportStatic.txt";
         
         List<String> lengths = Arrays.asList("Length 5", "Length 7", "Length 9", "Length 13", "Length 15", "Length 17");
         List<String> testFolders = Arrays.asList("Test 1", "Test 2", "Test 3", "Test 4", "Test 5");
@@ -28,16 +28,16 @@ public class BatchTrieTest {
                         System.out.println("Processing: " + filePath);
 
                         // Step 1: Construct Trie
-                        TrieNode tree = new TrieNode();
-                        // TrieNodeStatic tree1 = new TrieNodeStatic();
+                        // TrieNode tree = new TrieNode();
+                        TrieNodeStatic tree1 = new TrieNodeStatic();
 
                         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
                             String word;
                             while ((word = br.readLine()) != null) {
                                 word = word.trim().toLowerCase();
                                 if (!word.isEmpty()) {
-                                    tree.insert(word);
-                                    // TrieNodeStatic.insert(tree1, word);
+                                    // tree.insert(word);
+                                    TrieNodeStatic.insert(tree1, word);
                                 }
                             }
                         } catch (IOException e) {
@@ -47,7 +47,7 @@ public class BatchTrieTest {
                         }
 
                         // Step 2: Calculate Memory
-                        int memoryUsage = calculateMemory(tree);
+                        int memoryUsage = calculateMemory(tree1);
                         memoryUsages.get(length).get(fileName).add(memoryUsage);
                     }
                 }
@@ -83,23 +83,21 @@ public class BatchTrieTest {
         int totalMemory = 0;
         int hashTableSize = root.getHashTable().getTable().length;
         
-        int nodeMemory = 4; // sizeOf(int wordLength)
+        int nodeMemory = 4; // reference to RobinHoodHashing
         int robinHoodMemory = 13 + (hashTableSize * 4); // 13 bytes + table.size * 4 reference
-        nodeMemory += 4 * robinHoodMemory; // reference to RobinHoodHash: 4 * sizeOf(RobinHoodHash)
+        nodeMemory += robinHoodMemory; // sizeOf(RobinHoodHash)
 
         totalMemory += nodeMemory;
 
-        // for(Element element : root.getHashTable().getTable()){
-        //     if(element != null){
-        //         totalMemory += 15; // sizeOf(Element) = 15
-        //     }
-        //     // if element is null don't add its size to total memory
-        // }
-
-        totalMemory += 15 * root.getHashTable().getCapacity();
+        for(Element element : root.getHashTable().getTable()){
+            if(element != null){
+                totalMemory += 15; // sizeOf(Element) = 15
+            }
+            // if element is null don't add its size to total memory
+        }
 
         for (Element element : root.getHashTable().getTable()) {
-            if (element != null && element.getNode() != null) {
+            if (element != null) {
                 totalMemory += calculateMemory(element.getNode());
             }
         }
@@ -125,6 +123,6 @@ public class BatchTrieTest {
 
 	public static int calculateMemory(TrieNodeStatic root){
 		// traverseTrie(root) returns the number of nodes in the Trie tree
-		return 113 * traverseTrie(root); // sizeOf(TrieNodeStatic) = 113 bytes
+		return 112 * traverseTrie(root); // sizeOf(TrieNodeStatic) = 113 bytes
 	}
 }
