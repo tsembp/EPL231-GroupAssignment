@@ -22,7 +22,7 @@ public class RandomWordGenerator {
         try {
             // Specify the directory and file name
             String directoryPath = "./Dictionaries/Different Length";
-            String fileName = "random_words.txt";
+            String fileName = "100000.txt";
             
             // Ensure the directory exists
             File directory = new File(directoryPath);
@@ -34,7 +34,7 @@ public class RandomWordGenerator {
             }
             
             // Generate random words and save to the file
-            generateRandomWords(directoryPath + "/" + fileName, 1000); // Generate 1000 words
+            generateRandomWords(directoryPath + "/" + fileName, 100000); // Generate 1000 words
         } catch (IOException e) {
             System.out.println("An error occurred: " + e.getMessage());
         }

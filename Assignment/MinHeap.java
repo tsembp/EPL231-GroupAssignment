@@ -57,7 +57,7 @@ public class MinHeap {
     }
 
     public void insert(String word, int importance) {
-        if(search(word)) return;
+        if(search(word, importance)) return;
 
         if(isFull()){
             if(importance > importanceHeap[FRONT]){
@@ -97,15 +97,21 @@ public class MinHeap {
         return poppedWord;
     }
 
-    public boolean search(String word) {
+    public boolean search(String word, int importance) {
         for (int i = 0; i < size; i++) {
+            // If we encounter an importance greater than the given importance, exit early
+            if (importanceHeap[i] > importance) {
+                return false; // No need to check further
+            }
+    
+            // Check if the word matches
             if (strHeap[i].equals(word)) {
                 return true;
             }
         }
-        
         return false;
     }
+    
 
     public int getRootImportance() {
         if (size == 0) {

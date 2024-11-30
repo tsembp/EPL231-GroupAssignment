@@ -14,6 +14,8 @@ public class RobinHoodHashing {
         this.table = new Element[size];
     }
 
+    public int getCapacity() { return this.capacity; }
+
     public Element[] getTable(){
         return this.table;
     }

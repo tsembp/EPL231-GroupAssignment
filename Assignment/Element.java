@@ -12,6 +12,7 @@ public class Element {
         this.key = key;
         this.probeLength = probeLength;
         this.importance = 0;
+        this.node = null;
     }
 
     // Getters and Setters

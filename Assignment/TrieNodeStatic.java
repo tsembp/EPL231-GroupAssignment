@@ -137,5 +137,7 @@ public class TrieNodeStatic {
         System.out.println("Number of nodes: " + count);
 		System.out.println("Total memory: " + calculateMemory(tree));
 	}
+
+	public TrieNodeStatic[] getChildren() { return this.children; }
 	
 }

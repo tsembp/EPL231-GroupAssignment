@@ -1,14 +1,54 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
 
+    // public static void main(String[] args) {
+    //     /* CONSTRUCT DICTIONARY FILES */
+    //     TrieNode tree = new TrieNode();
+    //     String folderPath = "./Dictionaries/Different Length/Test1"; // Replace with the path to your folder
+
+    //     // Get all .txt files in the folder
+    //     File folder = new File(folderPath);
+    //     File[] files = folder.listFiles((dir, name) -> name.endsWith(".txt"));
+
+    //     if (files == null || files.length == 0) {
+    //         System.out.println("No .txt files found in the folder.");
+    //         return;
+    //     }
+
+    //     // Iterate through each file and process it
+    //     for (File file : files) {
+    //         System.out.println("-------- FILE " + file.getName() + " --------");
+    //         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+    //             String word;
+    //             while ((word = br.readLine()) != null) {
+    //                 word = word.trim().toLowerCase();
+    //                 if (!word.isEmpty()) {
+    //                     tree.insert(word);
+    //                 }
+    //             }
+    //         } catch (IOException e) {
+    //             System.err.println("Error reading file: " + file.getName());
+    //             e.printStackTrace();
+    //         }
+
+    //         // Calculate memory for the current Trie
+    //         int memory = calculateMemory(tree);
+    //         System.out.println("Total memory for " + file.getName() + ": " + memory + " bytes");
+
+    //         // Clear the Trie for the next file
+    //         tree = new TrieNode();
+    //     }
+    // }
+
     public static void main(String[] args) {
         /* CONSTRUCT DICTIONARY FILE */
         TrieNode tree = new TrieNode();
-        String dictionary = "planDict.txt"; // Replace with the path to your file
+        String dictionary = "./Dictionaries/Same Length/Length 5/Test 1/100000.txt"; // Replace with the path to your file
 
         // Step 1: Read words from the file and insert them into the Trie
         try (BufferedReader br = new BufferedReader(new FileReader(dictionary))) {
@@ -43,7 +83,7 @@ public class Main {
         }
 
         /* CALCULATE MEMORY */
-        System.out.println("Total Mem: " + calculateMemory(tree));
+        // System.out.println("Total Mem: " + calculateMemory(tree));
 
         /* CALCULATE IMPORTANCE OF EACH WORD OF THE DICTIONARY */
         String filename = "planScript.txt"; // Replace with the path to your file
@@ -150,9 +190,6 @@ public class Main {
         // Print heap list of most relative words
         heap2.printList();
 
-        // System.out.println("Recursvie calls in travserse: " + recursiveCallsTraverse);
-        // System.out.println("Recursive calls in criteria 2: " + recursiveCalls2);
-        // System.out.println("Recursive calls in criteria 3: " + recursiveCalls3);
     }
 
     private static void findWordsCriteria1(TrieNode node, String searchWord, StringBuilder currentWord, MinHeap heap, int criteriaFlag){
@@ -164,7 +201,7 @@ public class Main {
                 currentWord.append(element.getKey());
 
                 // Check if isWord and add to storage data structure
-                if(node.getWordLength() != 0 && element.getImportance() != 0) {
+                if(element.getImportance() != 0) {
                     // Insert in heap
                     heap.insert(currentWord.toString(), element.getImportance());
                 }
@@ -190,7 +227,7 @@ public class Main {
             if (element != null) {
                 currentWord.append(element.getKey());  // Append current character to the word
 
-                if(node.getWordLength() != 0 && element.getImportance() != 0) {
+                if(element.getImportance() != 0) {
                     if(currentWord.length() == searchWord.length()){
                         boolean criteria2Result = differentByTwoChars(currentWord.toString(), searchWord);
                         // If the two words differ by two AND element's importance is less => replace with heap's root
@@ -221,7 +258,7 @@ public class Main {
                 currentWord.append(element.getKey());
 
                 // Check if isWord and add to storage data structure
-                if(node.getWordLength() != 0 && element.getImportance() != 0) {
+                if(element.getImportance() != 0) {
                     if(isValidWord(searchWord, currentWord.toString())) { // If current word is valid
                         heap.insert(currentWord.toString(), element.getImportance());
                     }
@@ -244,8 +281,11 @@ public class Main {
         int totalMemory = 0;
         int hashTableSize = root.getHashTable().getTable().length;
         
-        totalMemory += 13; // other attributes of Node come out to 13 bytes
-        totalMemory += hashTableSize * 4; // 4 bytes reference
+        int nodeMemory = 4; // reference to RobinHoodHashing
+        int robinHoodMemory = 13 + (hashTableSize * 4); // 13 bytes + table.size * 4 reference
+        nodeMemory += robinHoodMemory; // sizeOf(RobinHoodHash)
+
+        totalMemory += nodeMemory;
 
         for(Element element : root.getHashTable().getTable()){
             if(element != null){
@@ -255,7 +295,7 @@ public class Main {
         }
 
         for (Element element : root.getHashTable().getTable()) {
-            if (element != null && element.getNode() != null) {
+            if (element != null) {
                 totalMemory += calculateMemory(element.getNode());
             }
         }

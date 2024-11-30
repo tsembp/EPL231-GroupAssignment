@@ -1,8 +1,8 @@
 public class TrieNode {
 	
 	private RobinHoodHashing hash;		// sizeOf(RobinHoodHash) * 4 bytes (reference)
-	private int wordLength;				// 4 bytes
-										// TOTAL: 4 bytes + sizeOf(RobinHoodHash)
+	// private int wordLength;				// 4 bytes
+										// TOTAL: 4 bytes + (4 *sizeOf(RobinHoodHash))
 
 	public TrieNode() {
 		hash = new RobinHoodHashing();
@@ -12,14 +12,6 @@ public class TrieNode {
 		return this.hash;
 	}
 
-	public int getWordLength(){
-		return this.wordLength;
-	}
-
-	public void setWordLength(int value){
-		this.wordLength = value;
-	}
-	
 	public void insert(String key) {
 		if(key == null || key.equals("")) return;
 
@@ -36,23 +28,24 @@ public class TrieNode {
 			}
 
 
+			if(i == (key.length() - 1)) {
+				finalIndex = index;
+				break;	
+			} 
+			
 			// Check if node of element at index is null => create one if yes
 			if (current.hash.getTable()[index].getNode() == null) {
 				current.hash.getTable()[index].setNode(new TrieNode());
 			}
 			
 			// If we reach the last character in the string, break to keep the current node's reference
-			if(i == (key.length() - 1)) {
-				finalIndex = index;
-				break;	
-			} 
 
 			// Move to next node
 			current = current.hash.getTable()[index].getNode();
 		}
 
 		// Set word length of word to key's length
-		current.wordLength = key.length();
+		// current.wordLength = key.length();
 		current.hash.getTable()[finalIndex].setIsWord(true);
 	}
 	
@@ -69,16 +62,17 @@ public class TrieNode {
 				return false;
 			}
 
-			// Check if node at index is null => create one if yes
-			if (current.hash.getTable()[index].getNode() == null) {
-				return false;
-			}
-
 			// If we reach the last character in the string, break to keep the current node's reference
 			if(i == key.length() - 1) { 
 				finalIndex = index;
 				break;
 			}
+
+			// Check if node at index is null => create one if yes
+			if (current.hash.getTable()[index].getNode() == null) {
+				return false;
+			}
+
 
 			// Move to next node
 			current = current.hash.getTable()[index].getNode();
@@ -97,14 +91,15 @@ public class TrieNode {
 
 			// Get 'c's index
 			int index = current.hash.getIndex(c);
-			if(index == -1 || current.hash.getTable()[index].getNode() == null){ // character not found => word doesnt exist
-				return;
-			}
-
-			// If we reach the last character in the string, break to keep the current node's reference
 			if(i == key.length() - 1) {
 				break;
 			}
+
+			if(index == -1 || current.hash.getTable()[index].getNode() == null){ // character not found => word doesnt exist
+				return;
+			}
+			
+			// If we reach the last character in the string, break to keep the current node's reference
 
 			// Move to next node
 			current = current.hash.getTable()[index].getNode();
@@ -112,7 +107,7 @@ public class TrieNode {
 
 
 		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
-		if (finalIndex != -1 && current.hash.getTable()[finalIndex] != null && current.wordLength == key.length() && current.hash.getTable()[finalIndex].getIsWord()) {
+		if (finalIndex != -1 && current.hash.getTable()[finalIndex] != null && current.hash.getTable()[finalIndex].getIsWord()) {
 			increaseImportance(current.hash.getTable()[finalIndex]);
 		}
 
