@@ -1,0 +1,54 @@
+Length: Length 5
+    Average for 1000 words is: 148710 bytes
+    Average for 5000 words is: 613817 bytes
+    Average for 10000 words is: 1133746 bytes
+    Average for 25000 words is: 2438841 bytes
+    Average for 50000 words is: 4229717 bytes
+    Average for 75000 words is: 5876658 bytes
+    Average for 100000 words is: 7444025 bytes
+
+Length: Length 7
+    Average for 1000 words is: 252647 bytes
+    Average for 5000 words is: 1134259 bytes
+    Average for 10000 words is: 2173441 bytes
+    Average for 25000 words is: 5036212 bytes
+    Average for 50000 words is: 9425754 bytes
+    Average for 75000 words is: 13668300 bytes
+    Average for 100000 words is: 17829289 bytes
+
+Length: Length 9
+    Average for 1000 words is: 356796 bytes
+    Average for 5000 words is: 1653864 bytes
+    Average for 10000 words is: 3212008 bytes
+    Average for 25000 words is: 7635177 bytes
+    Average for 50000 words is: 14627001 bytes
+    Average for 75000 words is: 21466085 bytes
+    Average for 100000 words is: 28227677 bytes
+
+Length: Length 13
+    Average for 1000 words is: 565068 bytes
+    Average for 5000 words is: 2693594 bytes
+    Average for 10000 words is: 4347389 bytes
+    Average for 25000 words is: 12839729 bytes
+    Average for 50000 words is: 25025531 bytes
+    Average for 75000 words is: 37065900 bytes
+    Average for 100000 words is: 49024186 bytes
+
+Length: Length 15
+    Average for 1000 words is: 668532 bytes
+    Average for 5000 words is: 3214157 bytes
+    Average for 10000 words is: 6332771 bytes
+    Average for 25000 words is: 15435345 bytes
+    Average for 50000 words is: 30226533 bytes
+    Average for 75000 words is: 44867232 bytes
+    Average for 100000 words is: 59423776 bytes
+
+Length: Length 17
+    Average for 1000 words is: 772094 bytes
+    Average for 5000 words is: 3733942 bytes
+    Average for 10000 words is: 7373164 bytes
+    Average for 25000 words is: 18037405 bytes
+    Average for 50000 words is: 35423200 bytes
+    Average for 75000 words is: 52668834 bytes
+    Average for 100000 words is: 69825668 bytes
+
