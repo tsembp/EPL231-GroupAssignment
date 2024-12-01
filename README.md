@@ -116,8 +116,7 @@ java Main "./Dictionaries/Plan Example/planDict.txt" "./Dictionaries/Plan Exampl
 
 
 ## Sources
-### Oxford Dictionary Word Length Distribution:
-- https://academic.oup.com/dsh/article-abstract/14/3/339/936869?utm_source=chatgpt.com&login=false
-- https://academic.oup.com/edited-volume/38609/chapter-abstract/334734241?redirectedFrom=fulltext&login=false
+### Average English Word Length Distribution
+- https://www.thefreelibrary.com/On%2Bword-length%2Band%2Bdictionary%2Bsize.-a0189832222?utm_source=chatgpt.com
 ### 466k English Word Dictionary
 - https://github.com/dwyl/english-words
