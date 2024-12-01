@@ -35,7 +35,7 @@ public class SearchEngine {
 
     public void findRelevantWords(String searchWord, int k) {
         if (!tree.search(searchWord)) {
-            System.out.println("Word " + searchWord + " not found (prefix method).");
+            System.out.println("Word " + searchWord + " not found in the dictionary");
             return;
         }
 
