@@ -17,12 +17,12 @@ public class DictionaryLoader {
         try (BufferedReader br = new BufferedReader(new FileReader(dictionaryPath))) {
             String word;
             while ((word = br.readLine()) != null) {
-                word = word.trim().toLowerCase();
-                if (!word.isEmpty()) {
+                word = word.trim().toLowerCase(); // trim word and convert to lowercase
+                if (!word.isEmpty()) { // insert word in tree if is not empty after trimming
                     tree.insert(word);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException e) { // catch exception thrown while reading
             e.printStackTrace();
         }
     }
@@ -31,11 +31,11 @@ public class DictionaryLoader {
         try (BufferedReader br = new BufferedReader(new FileReader(scriptPath))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] words = line.trim().toLowerCase().split("\\s+");
+                String[] words = line.trim().toLowerCase().split("\\s+"); // trim and split words read
                 for (String word : words) {
-                    word = cleanWord(word);
+                    word = cleanWord(word); // clean-up word from punctuation marks at begining and end
                     if (!word.isEmpty()) {
-                        tree.searchImportance(word);
+                        tree.searchImportance(word); // search word to assign importance
                     }
                 }
             }
@@ -48,8 +48,8 @@ public class DictionaryLoader {
         try (BufferedReader br = new BufferedReader(new FileReader(dictionaryPath))) {
             String word;
             while ((word = br.readLine()) != null) {
-                word = word.trim().toLowerCase();
-                if (!word.isEmpty() && !tree.search(word)) {
+                word = word.trim().toLowerCase(); // trim and convert word to lowercase
+                if (!word.isEmpty() && !tree.search(word)) { // if word is not found in tree print debug message
                     System.out.println("Word not found in Trie: " + word);
                 }
             }
@@ -59,6 +59,6 @@ public class DictionaryLoader {
     }
 
     private String cleanWord(String word) {
-        return word.replaceAll("[^a-zA-Z0-9]", "");
+        return word.replaceAll("[^a-zA-Z0-9]", ""); // regex to remove all punctuation marks
     }
 }

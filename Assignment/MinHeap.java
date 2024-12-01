@@ -39,10 +39,12 @@ public class MinHeap {
     }
 
     private void minHeapify(int pos) {
+        // Retrieve children positions
         int left = leftChild(pos);
         int right = rightChild(pos);
         int smallest = pos;
 
+        // Find minimum importance child to assign value to
         if (left < size && importanceHeap[left] < importanceHeap[smallest]) {
             smallest = left;
         }
@@ -50,6 +52,7 @@ public class MinHeap {
             smallest = right;
         }
 
+        // Heapify downwards to place pos at correct spot
         if (smallest != pos) {
             swap(pos, smallest);
             minHeapify(smallest);
@@ -57,9 +60,11 @@ public class MinHeap {
     }
 
     public void insert(String word, int importance) {
+        // If 'word' already exists in the tree, don't insert again
         if(search(word, importance)) return;
 
         if(isFull()){
+            // If heap is full, check if the least important word can be swapped with the new
             if(importance > importanceHeap[FRONT]){
                 remove();
                 insert(word, importance);
@@ -80,6 +85,7 @@ public class MinHeap {
     }
 
     public String remove() {
+        // Ensure unnessecary call of remove()
         if (size == 0) {
             System.out.println("Heap is empty");
             return null;
@@ -114,6 +120,7 @@ public class MinHeap {
     
 
     public int getRootImportance() {
+        // Error handling for empty heap
         if (size == 0) {
             System.out.println("Heap is empty");
             return -1;

@@ -32,7 +32,9 @@ public class RobinHoodHashing {
         int index = hashFunction(key);
 
         while (table[index] != null) {
-            if (newElement.getProbeLength() > table[index].getProbeLength()) { // sSwitch elements
+            // Compare probeLengths of new and current element
+            if (newElement.getProbeLength() > table[index].getProbeLength()) {
+                // If newElement is more unappreciated than current we have to swap them
                 Element temp = table[index];
                 table[index] = newElement;
                 newElement = temp;
@@ -81,20 +83,24 @@ public class RobinHoodHashing {
     }
 
     private void insertRehash(Element element) {
+        // Create a copy of the element passed in
         Element newElement = new Element(element.getKey(), 0);
-        newElement.setNode(element.getNode()); // Preserve the node reference
+        newElement.setNode(element.getNode());
         newElement.setImportance(element.getImportance());
         newElement.setIsWord(element.getIsWord());
 
         int index = hashFunction(newElement.getKey());
 
         while (table[index] != null) {
+            // Compare probeLengths of new element and current 
             if (newElement.getProbeLength() > table[index].getProbeLength()) { // Switch elements
+                // If newElement is more unappreciated than current we have to swap them
                 Element temp = table[index];
                 table[index] = newElement;
                 newElement = temp;
                 maxProbeLength = Math.max(maxProbeLength, table[index].getProbeLength());
             }
+
             newElement.incrementProbeLength(); // increase probeLength
             index = (index + 1) % size; // move to next index
         }
@@ -107,6 +113,7 @@ public class RobinHoodHashing {
         int index = hashFunction(key);
         int probeLength = 0;
 
+        // Use probeLength to avoid unnecessary iterations
         while (table[index] != null && probeLength <= maxProbeLength) {
             if (table[index].getKey() == key) { // same key => found
                 return true;

@@ -65,6 +65,12 @@ This project implements a search engine and data structure utilities using Java.
   - Saves the generated words to a text file in the specified directory.
   - Supports flexible word generation for varying lengths.
 
+#### Word Length Distribution
+
+The chart below illustrates the distribution of word lengths generated using the **RandomWordGenerator**, showing that the average word length is approximately 9.34:
+
+![Word Length Distribution](word-length-distribution-chart.png)
+
 ## Execution
 
 ### Requirements
@@ -82,7 +88,7 @@ java Main <dictionaryFile> <scriptFile>
 ```
 Example:
 ```bash
-java Main ./path-to/dictionary.txt ./path-to/script.txt
+java Main "./Dictionaries/Plan Example/planDict.txt" "./Dictionaries/Plan Example/planScript.txt"
 ```
 
 

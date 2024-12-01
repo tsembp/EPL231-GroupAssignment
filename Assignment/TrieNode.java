@@ -1,7 +1,7 @@
 public class TrieNode {
 	
 	private RobinHoodHashing hash;		// sizeOf(RobinHoodHash) * 4 bytes (reference)
-	// private int wordLength;				// 4 bytes
+	// private int wordLength;			// 4 bytes
 										// TOTAL: 4 bytes + (4 *sizeOf(RobinHoodHash))
 
 	public TrieNode() {
