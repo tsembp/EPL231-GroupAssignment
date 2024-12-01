@@ -27,7 +27,7 @@ public class TrieNode {
 				index = current.hash.getIndex(c); // get the index after insertion
 			}
 
-
+			// If we reach the last character in the string, break to keep the current node's reference
 			if(i == (key.length() - 1)) {
 				finalIndex = index;
 				break;	
@@ -38,14 +38,11 @@ public class TrieNode {
 				current.hash.getTable()[index].setNode(new TrieNode());
 			}
 			
-			// If we reach the last character in the string, break to keep the current node's reference
 
 			// Move to next node
 			current = current.hash.getTable()[index].getNode();
 		}
 
-		// Set word length of word to key's length
-		// current.wordLength = key.length();
 		current.hash.getTable()[finalIndex].setIsWord(true);
 	}
 	
@@ -91,6 +88,8 @@ public class TrieNode {
 
 			// Get 'c's index
 			int index = current.hash.getIndex(c);
+
+			// If we reach the last character in the string, break to keep the current node's reference
 			if(i == key.length() - 1) {
 				break;
 			}
@@ -99,7 +98,6 @@ public class TrieNode {
 				return;
 			}
 			
-			// If we reach the last character in the string, break to keep the current node's reference
 
 			// Move to next node
 			current = current.hash.getTable()[index].getNode();
