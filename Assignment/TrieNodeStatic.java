@@ -81,7 +81,7 @@ public class TrieNodeStatic {
 
 	public static int calculateMemory(TrieNodeStatic root){
 		// traverseTrie(root) returns the number of nodes in the Trie tree
-		return 113 * traverseTrie(root); // sizeOf(TrieNodeStatic) = 113 bytes
+		return 112 * traverseTrie(root); // sizeOf(TrieNodeStatic) = 113 bytes
 	}
 
 	public static void main(String[] args) {
