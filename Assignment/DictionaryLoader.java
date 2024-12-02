@@ -17,14 +17,15 @@ public class DictionaryLoader {
         try (BufferedReader br = new BufferedReader(new FileReader(dictionaryPath))) {
             String word;
             while ((word = br.readLine()) != null) {
-                word = word.trim().toLowerCase(); // trim word and convert to lowercase
-                if (!word.isEmpty()) { // insert word in tree if is not empty after trimming
+                word = cleanWord(word.trim().toLowerCase()); // Trim, convert to lowercase, and clean word
+                if (!word.isEmpty() && isValidWord(word)) { // Check if word is valid
                     tree.insert(word);
                 }
             }
         } catch (IOException e) { // catch exception thrown while reading
             e.printStackTrace();
         }
+
     }
 
     public void processScript(String scriptPath) {
@@ -42,13 +43,14 @@ public class DictionaryLoader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
     }
 
     public void validateDictionary(String dictionaryPath) {
         try (BufferedReader br = new BufferedReader(new FileReader(dictionaryPath))) {
             String word;
             while ((word = br.readLine()) != null) {
-                word = word.trim().toLowerCase(); // trim and convert word to lowercase
+                word = cleanWord(word.trim().toLowerCase()); // Trim, convert to lowercase, and clean word
                 if (!word.isEmpty() && !tree.search(word)) { // if word is not found in tree print debug message
                     System.out.println("Word not found in Trie: " + word);
                 }
@@ -59,6 +61,31 @@ public class DictionaryLoader {
     }
 
     private String cleanWord(String word) {
-        return word.replaceAll("[^a-zA-Z0-9]", ""); // regex to remove all punctuation marks
+        // Remove punctuation marks at the beginning and end of the word
+        int start = 0;
+        int end = word.length();
+    
+        // Adjust `start` index if the first character is a punctuation mark
+        while (start < end && !Character.isLetterOrDigit(word.charAt(start))) {
+            start++;
+        }
+    
+        // Adjust `end` index if the last character is a punctuation mark
+        while (end > start && !Character.isLetterOrDigit(word.charAt(end - 1))) {
+            end--;
+        }
+    
+        // Return the cleaned substring
+        return word.substring(start, end);
     }
+
+    private boolean isValidWord(String word) {
+        for (int i = 1; i < word.length() - 1; i++) { // Skip first and last character
+            if (!Character.isLetterOrDigit(word.charAt(i))) {
+                return false; // Contains invalid character
+            }
+        }
+        return true;
+    }
+
 }
