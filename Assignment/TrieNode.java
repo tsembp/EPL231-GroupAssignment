@@ -1,144 +1,218 @@
+/**
+ * Represents a node in a Trie data structure. Each node maintains a Robin Hood Hash Table
+ * to manage its child elements and supports operations like insertion, search, and importance tracking.
+ */
 public class TrieNode {
-	
-	private RobinHoodHashing hash;		// sizeOf(RobinHoodHash) * 4 bytes (reference)
-	// private int wordLength;			// 4 bytes
-										// TOTAL: 4 bytes + (4 *sizeOf(RobinHoodHash))
 
-	public TrieNode() {
-		hash = new RobinHoodHashing();
-	}
+    private RobinHoodHashing hash; // Hash table for storing child elements
 
-	public RobinHoodHashing getHashTable(){
-		return this.hash;
-	}
+    /**
+     * Constructs a TrieNode with an empty Robin Hood Hash Table.
+     */
+    public TrieNode() {
+        hash = new RobinHoodHashing();
+    }
 
-	public void insert(String key) {
-		if(key == null || key.equals("")) return;
+    /**
+     * Retrieves the hash table of the TrieNode.
+     *
+     * @return the hash table associated with this node.
+     */
+    public RobinHoodHashing getHashTable() {
+        return this.hash;
+    }
 
-		TrieNode current = this;
-		int finalIndex = 0;
+    /**
+     * Inserts a word into the Trie. Creates new nodes as necessary.
+     *
+     * @param key the word to insert into the Trie.
+     */
+    public void insert(String key) {
+        if (key == null || key.equals("")) return;
 
-		for(int i=0; i < key.length(); i++){
-			char c = key.charAt(i);
-			
-			int index = current.hash.getIndex(c);
-			if(index == -1){ // c is not in current.hash
-				current.hash.insert(c); // insert c into current.hash
-				index = current.hash.getIndex(c); // get the index after insertion
-			}
+        TrieNode current = this;
+        int finalIndex = 0;
 
-			// If we reach the last character in the string, break to keep the current node's reference
-			if(i == (key.length() - 1)) {
-				finalIndex = index;
-				break;	
-			} 
-			
-			// Check if node of element at index is null => create one if yes
-			if (current.hash.getTable()[index].getNode() == null) {
-				current.hash.getTable()[index].setNode(new TrieNode());
-			}
-			
+        for (int i = 0; i < key.length(); i++) {
+            char c = key.charAt(i);
 
-			// Move to next node
-			current = current.hash.getTable()[index].getNode();
-		}
+            // Get the index of the character in the hash table
+            int index = current.hash.getIndex(c);
+            if (index == -1) { // Character not present, insert into hash table
+                current.hash.insert(c);
+                index = current.hash.getIndex(c); // Get index after insertion
+            }
 
-		current.hash.getTable()[finalIndex].setIsWord(true);
-	}
-	
-	public boolean search(String key) {
-		TrieNode current = this;
-		int finalIndex = 0;
+            // If last character, break to keep reference to current node
+            if (i == key.length() - 1) {
+                finalIndex = index;
+                break;
+            }
 
-		// Iterate over every character of string
-		for(int i=0; i < key.length(); i++){
-			char c = key.charAt(i);
+            // If the node at the current index is null, create a new node
+            if (current.hash.getTable()[index].getNode() == null) {
+                current.hash.getTable()[index].setNode(new TrieNode());
+            }
 
-			int index = current.hash.getIndex(c);
-			if(index == -1){ // character not found => word doesnt exist
-				return false;
-			}
+            // Move to the next node
+            current = current.hash.getTable()[index].getNode();
+        }
 
-			// If we reach the last character in the string, break to keep the current node's reference
-			if(i == key.length() - 1) { 
-				finalIndex = index;
-				break;
-			}
+        // Mark the final character as the end of a word
+        current.hash.getTable()[finalIndex].setIsWord(true);
+    }
 
-			// Check if node at index is null => create one if yes
-			if (current.hash.getTable()[index].getNode() == null) {
-				return false;
-			}
+    /**
+     * Searches for a word in the Trie.
+     *
+     * @param key the word to search for.
+     * @return true if the word exists in the Trie, false otherwise.
+     */
+    public boolean search(String key) {
+        TrieNode current = this;
+        int finalIndex = 0;
 
+        // Iterate over each character in the word
+        for (int i = 0; i < key.length(); i++) {
+            char c = key.charAt(i);
 
-			// Move to next node
-			current = current.hash.getTable()[index].getNode();
-		}
+            // Get the index of the character in the hash table
+            int index = current.hash.getIndex(c);
+            if (index == -1) { // Character not found
+                return false;
+            }
 
-		return finalIndex != -1 && current.hash.getTable()[finalIndex] != null 
-				&& current.hash.getTable()[finalIndex].getIsWord();
-	}
+            // If last character, break to keep reference to the current node
+            if (i == key.length() - 1) {
+                finalIndex = index;
+                break;
+            }
 
-	public void searchImportance(String key) {
-		TrieNode current = this;
+            // If the node at the current index is null, word doesn't exist
+            if (current.hash.getTable()[index].getNode() == null) {
+                return false;
+            }
 
-		// Iterate over every character of string
-		for(int i=0; i < key.length(); i++){
-			char c = key.charAt(i);
+            // Move to the next node
+            current = current.hash.getTable()[index].getNode();
+        }
 
-			// Get 'c's index
-			int index = current.hash.getIndex(c);
+        // Return true if the final character marks the end of a word
+        return finalIndex != -1 && current.hash.getTable()[finalIndex] != null
+                && current.hash.getTable()[finalIndex].getIsWord();
+    }
 
-			// If we reach the last character in the string, break to keep the current node's reference
-			if(i == key.length() - 1) {
-				break;
-			}
+    /**
+     * Searches for a word in the Trie and increases its importance if found.
+     *
+     * @param key the word to search for.
+     */
+    public void searchImportance(String key) {
+        TrieNode current = this;
 
-			if(index == -1 || current.hash.getTable()[index].getNode() == null){ // character not found => word doesnt exist
-				return;
-			}
-			
+        // Iterate over each character in the word
+        for (int i = 0; i < key.length(); i++) {
+            char c = key.charAt(i);
 
-			// Move to next node
-			current = current.hash.getTable()[index].getNode();
-		}
+            // Get the index of the character in the hash table
+            int index = current.hash.getIndex(c);
 
+            // If last character, break to keep reference to the current node
+            if (i == key.length() - 1) {
+                break;
+            }
 
-		int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
-		if (finalIndex != -1 && current.hash.getTable()[finalIndex] != null && current.hash.getTable()[finalIndex].getIsWord()) {
-			increaseImportance(current.hash.getTable()[finalIndex]);
-		}
+            if (index == -1 || current.hash.getTable()[index].getNode() == null) {
+                return; // Word doesn't exist
+            }
 
-	}
+            // Move to the next node
+            current = current.hash.getTable()[index].getNode();
+        }
 
-	private void increaseImportance(Element element) {
-		element.setImportance(element.getImportance() + 1);
-	}
+        int finalIndex = current.hash.getIndex(key.charAt(key.length() - 1));
+        if (finalIndex != -1 && current.hash.getTable()[finalIndex] != null
+                && current.hash.getTable()[finalIndex].getIsWord()) {
+            increaseImportance(current.hash.getTable()[finalIndex]);
+        }
+    }
 
-	public String reconstructWord(TrieNode root, TrieNode targetNode) {
-		StringBuilder word = new StringBuilder();
-		if (findWordDFS(root, targetNode, word)) {
-			return word.toString();
-		}
-		return null; // If the targetNode is not found in the trie
-	}
-	
-	private boolean findWordDFS(TrieNode currentNode, TrieNode targetNode, StringBuilder word) {
-		if (currentNode == targetNode) {
-			return true; // Found the target node
-		}
-	
-		for (Element element : currentNode.getHashTable().getTable()) {
-			if (element != null) {
-				word.append(element.getKey()); // Add the character to the word
-				if (findWordDFS(element.getNode(), targetNode, word)) {
-					return true; // If found in this path, return true
-				}
-				word.deleteCharAt(word.length() - 1); // Backtrack
-			}
-		}
-	
-		return false; // Not found in this path
-	}
+    /**
+     * Increases the importance of the given element.
+     *
+     * @param element the element whose importance is to be increased.
+     */
+    private void increaseImportance(Element element) {
+        element.setImportance(element.getImportance() + 1);
+    }
 
+    /**
+     * Reconstructs the word leading to a specific node in the Trie.
+     *
+     * @param root the root of the Trie.
+     * @param targetNode the node for which the word is to be reconstructed.
+     * @return the word leading to the target node, or null if the node is not found.
+     */
+    public String reconstructWord(TrieNode root, TrieNode targetNode) {
+        StringBuilder word = new StringBuilder();
+        if (findWordDFS(root, targetNode, word)) {
+            return word.toString();
+        }
+        return null;
+    }
+
+    /**
+     * Performs a depth-first search to find a target node and reconstruct the word leading to it.
+     *
+     * @param currentNode the current node in the search.
+     * @param targetNode the target node.
+     * @param word the StringBuilder to build the word.
+     * @return true if the target node is found, false otherwise.
+     */
+    private boolean findWordDFS(TrieNode currentNode, TrieNode targetNode, StringBuilder word) {
+        if (currentNode == targetNode) {
+            return true; // Found the target node
+        }
+
+        for (Element element : currentNode.getHashTable().getTable()) {
+            if (element != null) {
+                word.append(element.getKey()); // Add the character to the word
+                if (findWordDFS(element.getNode(), targetNode, word)) {
+                    return true; // If found in this path, return true
+                }
+                word.deleteCharAt(word.length() - 1); // Backtrack
+            }
+        }
+
+        return false; // Not found in this path
+    }
+
+    /**
+     * Traverses the Trie from the given node and prints all words with their importance values.
+     *
+     * @param node the starting node for traversal.
+     * @param currentWord the StringBuilder to construct words during traversal.
+     */
+    public void traverse(TrieNode node, StringBuilder currentWord) {
+        if (node == null) return;
+
+        for (Element element : node.getHashTable().getTable()) {
+            if (element != null) {
+                currentWord.append(element.getKey()); // Add the character to form the word
+
+                // If this element represents a complete word, print its importance
+                if (element.getIsWord()) {
+                    System.out.println(currentWord.toString() + ": Importance = " + element.getImportance());
+                }
+
+                // Recursively traverse the next node
+                if (element.getNode() != null) {
+                    traverse(element.getNode(), currentWord);
+                }
+
+                // Backtrack
+                currentWord.deleteCharAt(currentWord.length() - 1);
+            }
+        }
+    }
 }
